@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IShotoBase
+namespace Assets.Code.Shoto
 {
-    void StateStart();
-    void StateUpdate();
+    public interface IShotoBase
+    {
+        void StateStart();
+        void StateUpdate();
+    }
 }

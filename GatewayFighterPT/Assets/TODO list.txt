@@ -1,0 +1,3 @@
+-Attack
+ >Skill shot. Vector 2 from input axis
+ >inherit some velocity from Dash on cancel. Not sure how much. 10%?
