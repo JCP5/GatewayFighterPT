@@ -16,7 +16,6 @@ namespace Assets.Code.Shoto
 
             manager.grounded = false;
             manager.rb.AddForce(Vector2.up * manager.jumpStrength * Time.fixedDeltaTime, ForceMode2D.Force);
-            manager.anim.SetInteger("AnimState", 2);
             manager.anim.Play("2_Jump", -1, 0);
         }
 
@@ -30,8 +29,8 @@ namespace Assets.Code.Shoto
         public void StateUpdate()
         {
             manager.DashCheck();
+            manager.AttackCheck();
             manager.FlipX();
-
         }
     }
 }

@@ -1,13 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
+using Assets.Code.MiscManagers;
 
 namespace Assets.Code.Shoto
 {
     public class CharacterState : MonoBehaviour
     {
         public IShotoBase activeState;
+        public InputDetector id;
+        public string myAxisY;
+        public string myAxisX;
 
+        public int playerNumber;
         public float moveSpeed = 10;
         public float jumpStrength = 10;
         public float dashStrength = 100;
@@ -28,13 +34,18 @@ namespace Assets.Code.Shoto
         // Start is called before the first frame update
         void Start()
         {
+            id = FindObjectOfType<InputDetector>();
             doubleBuffer = adjustDoubleBuffer;
             anim = GetComponent<Animator>();
+            playerNumber = PlayerNumber(gameObject.tag);
 
             if (GetComponent<Rigidbody2D>() != null)
                 rb = GetComponent<Rigidbody2D>();
             else
                 Debug.LogError("RigidBody is missing");
+
+            myAxisX = gameObject.tag + "_Horizontal" + id.joysticks[playerNumber - 1];
+            myAxisY = gameObject.tag + "_Vertical" + id.joysticks[playerNumber - 1];
 
             activeState = new Free(this);
         }
@@ -43,12 +54,12 @@ namespace Assets.Code.Shoto
         void FixedUpdate()
         {
             activeState.StateUpdate();
-            Debug.Log(activeState);
+            //Debug.Log(activeState);
         }
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            if (activeState is Jump && collision.gameObject.tag == "Ground")
+            if ((activeState is Jump || activeState is Attack || activeState is Dash) && collision.gameObject.tag == "Ground" && grounded == false)
             {
                 grounded = true;
                 activeState = new Free(this);
@@ -77,7 +88,7 @@ namespace Assets.Code.Shoto
                 }
             }
 
-            if (Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1)
+            if (Mathf.Abs(Input.GetAxisRaw(myAxisX)) == 1)
             {
                 if (hzSwitch == false)
                 {
@@ -85,18 +96,18 @@ namespace Assets.Code.Shoto
                     hzSwitch = true;
                     xAxisCounter++;
 
-                    if (first == 0 || first != Input.GetAxisRaw("Horizontal"))
+                    if (first == 0 || first != Input.GetAxisRaw(myAxisX))
                     {
-                        first = Input.GetAxisRaw("Horizontal");
+                        first = Input.GetAxisRaw(myAxisX);
                         doubleBuffer = adjustDoubleBuffer;
                     }
                     else if (Mathf.Abs(first) == 1)
                     {
-                        second = Input.GetAxisRaw("Horizontal");
+                        second = Input.GetAxisRaw(myAxisX);
                     }
                 }
             }
-            if (Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 0)
+            if (Mathf.Abs(Input.GetAxisRaw(myAxisX)) == 0)
             {
                 hzSwitch = false;
             }
@@ -104,9 +115,9 @@ namespace Assets.Code.Shoto
 
         public void FlipX()
         {
-            if (Input.GetAxis("Horizontal") > 0)
+            if (Input.GetAxis(myAxisX) > 0)
                 GetComponent<SpriteRenderer>().flipX = false;
-            else if (Input.GetAxis("Horizontal") < 0)
+            else if (Input.GetAxis(myAxisX) < 0)
                 GetComponent<SpriteRenderer>().flipX = true;
         }
 
@@ -114,20 +125,23 @@ namespace Assets.Code.Shoto
         {
             if (Input.GetAxisRaw("Fire1") == 1)
             {
-                activeState = new Attack(this);
+                activeState = new Attack(this, new Vector2 (Input.GetAxisRaw(myAxisX), Input.GetAxisRaw(myAxisY)));
             }
         }
 
         public void AnimationFinish()
         {
-            anim.SetInteger("AnimState", 0);
-            activeState = new Free(this);
+            if (grounded == true)
+                activeState = new Free(this);
+            else if (grounded == false)
+                activeState = new Jump(this, Vector2.zero);
         }
 
+        //unused so far
         public void ForceAttack()
         {
             Debug.Log("Hello");
-            if(Mathf.Abs(Input.GetAxis("Horizontal")) != 1)
+            if(Mathf.Abs(Input.GetAxis(myAxisX)) != 1)
             {
                 anim.SetInteger("AnimState", 6);
                 AnimationFinish();
@@ -137,6 +151,22 @@ namespace Assets.Code.Shoto
                 anim.SetInteger("AnimState", 5);
                 AnimationFinish();
             }
+        }
+
+        //use playerNumber to get index of corresponding controller type in InputDetector
+        //so if the player number is 1 then get the joystick at InputDetector.joysticks[1];
+        public int PlayerNumber(string s)
+        {
+            int number = 0;
+
+            if (s == "P1")
+                number = 1;
+            else if (s == "P2")
+                number = 2;
+            else
+                Debug.LogError("Incorrect Tag");
+
+            return number;
         }
     }
 }

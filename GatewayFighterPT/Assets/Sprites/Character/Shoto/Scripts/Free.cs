@@ -27,25 +27,25 @@ namespace Assets.Code.Shoto
 
         void FreeMovement()
         {
-            if (Input.GetAxis("Vertical") == 1)
-            {
-                manager.rb.velocity = new Vector2(Input.GetAxis("Horizontal") * manager.moveSpeed * Time.fixedDeltaTime, Input.GetAxis("Vertical") * manager.jumpStrength * Time.fixedDeltaTime);
+            if (Input.GetAxis(manager.myAxisY) == 1) //Check for jump
+            {                                                                                                                   //-1 because of off by 1 error
+                //add the x and y axis to create the jump vector
+                manager.rb.velocity = new Vector2(Input.GetAxis(manager.myAxisX) * manager.moveSpeed * Time.fixedDeltaTime, Input.GetAxis(manager.myAxisY) * manager.jumpStrength * Time.fixedDeltaTime);
                 manager.activeState = new Jump(manager, manager.rb.velocity);
             }
-            else
+            else //No input on the Y axis
             {
-                manager.rb.velocity = new Vector2(Input.GetAxis("Horizontal") * manager.moveSpeed * Time.fixedDeltaTime, 0);
+                //Set Velocity to be the input on the X axis and set animations on whether or not it's being used
+                manager.rb.velocity = new Vector2(Input.GetAxis(manager.myAxisX) * manager.moveSpeed * Time.fixedDeltaTime, 0);
 
-                if (Mathf.Abs(Input.GetAxis("Horizontal")) == 1)
+                if (Mathf.Abs(Input.GetAxis(manager.myAxisX)) != 0)
                 {
-                    if (manager.anim.GetInteger("AnimState") != 1)
-                        manager.anim.SetInteger("AnimState", 1);
+                    manager.anim.Play("1_Run");
                     manager.FlipX();
                 }
-                else if (Mathf.Abs(Input.GetAxis("Horizontal")) == 0)
+                else if (Mathf.Abs(Input.GetAxis(manager.myAxisX)) == 0)
                 {
-                    if (manager.anim.GetInteger("AnimState") != 0)
-                        manager.anim.SetInteger("AnimState", 0);
+                    manager.anim.Play("0_Idle");
                 }
             }
         }

@@ -9,7 +9,7 @@ namespace Assets.Code.Shoto
         CharacterState manager;
         float direction;
         float strength;
-        float dashDuration = 0.166f;
+        float dashDuration = 10f / 60f;
 
         public Dash(CharacterState managerRef, float v)
         {
@@ -28,6 +28,8 @@ namespace Assets.Code.Shoto
 
         public void StateUpdate()
         {
+            manager.DashCheck();
+            manager.AttackCheck();
             if (manager.grounded == true)
             {
                 if (dashDuration > 0)
@@ -35,12 +37,11 @@ namespace Assets.Code.Shoto
                     dashDuration -= Time.fixedDeltaTime;
                     manager.rb.velocity = new Vector2(manager.moveSpeed * strength * direction * Time.fixedDeltaTime, 0);
 
-                    if (manager.anim.GetInteger("AnimState") != 3)
-                        manager.anim.SetInteger("AnimState", 3);
+                    manager.anim.Play("3_Dash");
 
-                    if (Input.GetAxis("Vertical") == 1)
+                    if (Input.GetAxis(manager.myAxisY) == 1)
                     {
-                        manager.rb.velocity = new Vector2(manager.moveSpeed * strength * direction * Time.fixedDeltaTime, Input.GetAxis("Vertical") * manager.jumpStrength * Time.fixedDeltaTime);
+                        manager.rb.velocity = new Vector2(manager.moveSpeed * strength * direction * Time.fixedDeltaTime, Input.GetAxis(manager.myAxisY) * manager.jumpStrength * Time.fixedDeltaTime);
                         manager.activeState = new Jump(manager, manager.rb.velocity);
                     }
                 }
@@ -54,7 +55,8 @@ namespace Assets.Code.Shoto
                     dashDuration -= Time.fixedDeltaTime;
                     manager.rb.gravityScale = 0;
                     manager.rb.velocity = new Vector2(manager.moveSpeed * strength / 1.5f * direction * Time.fixedDeltaTime, 0);
-                    manager.anim.SetInteger("AnimState", 9);
+
+                    manager.anim.Play("9_AirDash");
                 }
                 else if (manager.grounded == true)
                 {
