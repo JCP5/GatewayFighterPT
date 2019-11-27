@@ -1,3 +1,2 @@
--Attack
- @Double Swing bug on slash sometimes
- @*Attacking after an AirDash does weird shit
+-Add Hit/hurtboxes to animations
+ >Also clashboxes

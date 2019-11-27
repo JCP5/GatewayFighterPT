@@ -27,10 +27,10 @@ namespace Assets.Code.Shoto
 
         void FreeMovement()
         {
-            if (Input.GetAxis(manager.myAxisY) == 1) //Check for jump
-            {                                                                                                                   //-1 because of off by 1 error
+            if (Input.GetAxis(manager.myAxisY) > 0.5f) //Check for jump
+            {
                 //add the x and y axis to create the jump vector
-                manager.rb.velocity = new Vector2(Input.GetAxis(manager.myAxisX) * manager.moveSpeed * Time.fixedDeltaTime, Input.GetAxis(manager.myAxisY) * manager.jumpStrength * Time.fixedDeltaTime);
+                manager.rb.velocity = new Vector2(Mathf.Round(Input.GetAxis(manager.myAxisX)) * manager.moveSpeed * Time.fixedDeltaTime, Mathf.Round(Input.GetAxis(manager.myAxisY)) * manager.jumpStrength * Time.fixedDeltaTime);
                 manager.activeState = new Jump(manager, manager.rb.velocity);
             }
             else //No input on the Y axis

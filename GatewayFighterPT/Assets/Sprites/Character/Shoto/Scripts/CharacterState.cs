@@ -12,6 +12,7 @@ namespace Assets.Code.Shoto
         public InputDetector id;
         public string myAxisY;
         public string myAxisX;
+        public string myAxisAttack;
 
         public int playerNumber;
         public float moveSpeed = 10;
@@ -44,15 +45,13 @@ namespace Assets.Code.Shoto
             else
                 Debug.LogError("RigidBody is missing");
 
-            myAxisX = gameObject.tag + "_Horizontal" + id.joysticks[playerNumber - 1];
-            myAxisY = gameObject.tag + "_Vertical" + id.joysticks[playerNumber - 1];
-
             activeState = new Free(this);
         }
 
         // Update is called once per frame
         void FixedUpdate()
         {
+            Debug.Log(new Vector2(Input.GetAxis(myAxisX), Input.GetAxis(myAxisY)));
             activeState.StateUpdate();
             //Debug.Log(activeState);
         }
@@ -88,7 +87,7 @@ namespace Assets.Code.Shoto
                 }
             }
 
-            if (Mathf.Abs(Input.GetAxisRaw(myAxisX)) == 1)
+            if (Mathf.Abs(Input.GetAxisRaw(myAxisX)) > 0.5f)
             {
                 if (hzSwitch == false)
                 {
@@ -96,14 +95,14 @@ namespace Assets.Code.Shoto
                     hzSwitch = true;
                     xAxisCounter++;
 
-                    if (first == 0 || first != Input.GetAxisRaw(myAxisX))
+                    if (first == 0 || first != Mathf.Round(Input.GetAxisRaw(myAxisX)))
                     {
-                        first = Input.GetAxisRaw(myAxisX);
+                        first = Mathf.Round(Input.GetAxisRaw(myAxisX));
                         doubleBuffer = adjustDoubleBuffer;
                     }
                     else if (Mathf.Abs(first) == 1)
                     {
-                        second = Input.GetAxisRaw(myAxisX);
+                        second = Mathf.Round(Input.GetAxisRaw(myAxisX));
                     }
                 }
             }
@@ -123,9 +122,9 @@ namespace Assets.Code.Shoto
 
         public void AttackCheck()
         {
-            if (Input.GetAxisRaw("Fire1") == 1)
+            if (Input.GetAxisRaw(myAxisAttack) == 1)
             {
-                activeState = new Attack(this, new Vector2 (Input.GetAxisRaw(myAxisX), Input.GetAxisRaw(myAxisY)));
+                activeState = new Attack(this, new Vector2 (Mathf.Round(Input.GetAxisRaw(myAxisX)), Mathf.Round(Input.GetAxisRaw(myAxisY))));
             }
         }
 
@@ -165,6 +164,10 @@ namespace Assets.Code.Shoto
                 number = 2;
             else
                 Debug.LogError("Incorrect Tag");
+
+            myAxisX = gameObject.tag + "_Horizontal" + id.joysticks[number - 1];
+            myAxisY = gameObject.tag + "_Vertical" + id.joysticks[number - 1];
+            myAxisAttack = gameObject.tag + "_Fire1" + id.joysticks[number - 1];
 
             return number;
         }

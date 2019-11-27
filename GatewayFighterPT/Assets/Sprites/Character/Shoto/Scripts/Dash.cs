@@ -30,6 +30,7 @@ namespace Assets.Code.Shoto
         {
             manager.DashCheck();
             manager.AttackCheck();
+
             if (manager.grounded == true)
             {
                 if (dashDuration > 0)
@@ -39,9 +40,9 @@ namespace Assets.Code.Shoto
 
                     manager.anim.Play("3_Dash");
 
-                    if (Input.GetAxis(manager.myAxisY) == 1)
+                    if (Input.GetAxis(manager.myAxisY) > 0.5f)
                     {
-                        manager.rb.velocity = new Vector2(manager.moveSpeed * strength * direction * Time.fixedDeltaTime, Input.GetAxis(manager.myAxisY) * manager.jumpStrength * Time.fixedDeltaTime);
+                        manager.rb.velocity = new Vector2(manager.moveSpeed * strength * direction * Time.fixedDeltaTime, Mathf.Round(Input.GetAxis(manager.myAxisY)) * manager.jumpStrength * Time.fixedDeltaTime);
                         manager.activeState = new Jump(manager, manager.rb.velocity);
                     }
                 }

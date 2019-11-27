@@ -49,11 +49,11 @@ namespace Assets.Code.Shoto
 
             if (waitForStartUp < 0)
             {
-                if (Mathf.Abs(Input.GetAxis("Fire1")) == 1 && attacking == false)//Hold check
+                if (Mathf.Abs(Input.GetAxis(manager.myAxisAttack)) == 1 && attacking == false)//Hold check
                 {
                     manager.DashCheck();
                     manager.anim.Play("4_Hold");
-                    aimVector = new Vector2(Input.GetAxisRaw(manager.myAxisX), Input.GetAxisRaw(manager.myAxisY));
+                    aimVector = new Vector2(Mathf.Round(Input.GetAxisRaw(manager.myAxisX)), Mathf.Round(Input.GetAxisRaw(manager.myAxisY)));
 
                     if (manager.grounded == false)
                     {
@@ -62,12 +62,12 @@ namespace Assets.Code.Shoto
                         manager.rb.AddForce(new Vector2(aimVector.x, aimVector.y));
                     }
                 }
-                else if (Mathf.Abs(Input.GetAxis("Fire1")) != 1 && Mathf.Abs(Input.GetAxis(manager.myAxisX)) != 1 && Mathf.Abs(Input.GetAxis(manager.myAxisY)) != 1 && attacking == false)//parry check
+                else if (Mathf.Abs(Input.GetAxis(manager.myAxisAttack)) != 1 && Mathf.Abs(Mathf.Round(Input.GetAxis(manager.myAxisX))) != 1 && Mathf.Abs(Mathf.Round(Input.GetAxis(manager.myAxisY))) != 1 && attacking == false)//parry check
                 {
                     attacking = true;
                     manager.anim.Play("6_Parry");
                 }
-                else if (Input.GetAxis("Fire1") != 1 && (Input.GetAxis(manager.myAxisX) != 0 || Mathf.Abs(Input.GetAxis(manager.myAxisY)) != 0) && attacking == false)//slash check
+                else if (Input.GetAxis(manager.myAxisAttack) != 1 && (Mathf.Abs(Input.GetAxis(manager.myAxisX)) > 0.5f || Mathf.Abs(Input.GetAxis(manager.myAxisY)) > 0.5f) && attacking == false)//slash check
                 {
                     attacking = true;
                     manager.anim.Play("5_Slash");
