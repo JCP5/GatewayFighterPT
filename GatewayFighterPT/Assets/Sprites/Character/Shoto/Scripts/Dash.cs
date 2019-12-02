@@ -55,7 +55,7 @@ namespace Assets.Code.Shoto
                 {
                     dashDuration -= Time.fixedDeltaTime;
                     manager.rb.gravityScale = 0;
-                    manager.rb.velocity = new Vector2(manager.moveSpeed * strength / 1.5f * direction * Time.fixedDeltaTime, 0);
+                    manager.rb.velocity = new Vector2(manager.moveSpeed * strength / 1f * direction * Time.fixedDeltaTime, 0);
 
                     manager.anim.Play("9_AirDash");
                 }

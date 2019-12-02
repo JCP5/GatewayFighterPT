@@ -11,6 +11,7 @@ namespace Assets.Code.Shoto
         public Free(CharacterState managerRef)
         {
             manager = managerRef;
+            manager.invulToStrike = false; //On animation cancel
         }
 
         public void StateStart()
@@ -36,7 +37,7 @@ namespace Assets.Code.Shoto
             else //No input on the Y axis
             {
                 //Set Velocity to be the input on the X axis and set animations on whether or not it's being used
-                manager.rb.velocity = new Vector2(Input.GetAxis(manager.myAxisX) * manager.moveSpeed * Time.fixedDeltaTime, 0);
+                manager.rb.velocity = new Vector2(Mathf.Round(Input.GetAxis(manager.myAxisX)) * manager.moveSpeed * Time.fixedDeltaTime, 0);
 
                 if (Mathf.Abs(Input.GetAxis(manager.myAxisX)) != 0)
                 {

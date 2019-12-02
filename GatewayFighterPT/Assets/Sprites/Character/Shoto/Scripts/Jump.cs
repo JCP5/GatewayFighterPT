@@ -29,8 +29,10 @@ namespace Assets.Code.Shoto
         public void StateUpdate()
         {
             manager.DashCheck();
-            manager.AttackCheck();
             manager.FlipX();
+
+            if (manager.airAttack == false)
+                manager.AttackCheck();
         }
     }
 }
