@@ -18,6 +18,8 @@ namespace Assets.Code.Box
         {
             if (collision.GetComponent<HitBox>() || collision.GetComponent<ClashBox>())
             {
+                Instantiate(manager.vfx["Parry"], transform.position, Quaternion.identity);
+
                 collision.GetComponentInParent<CharacterState>().activeState = new Parried(collision.GetComponentInParent<CharacterState>());
 
                 manager.AnimationFinish();//Check if grounded and set appropriate state

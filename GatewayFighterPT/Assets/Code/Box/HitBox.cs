@@ -12,8 +12,9 @@ namespace Assets.Code.Box
         {
             if (collision.GetComponent<HurtBox>() && collision.transform.parent.tag != this.transform.parent.tag && collision.GetComponentInParent<CharacterState>().invulToStrike == false)
             {
+                this.GetComponentInParent<CharacterState>().activeState = new PostRound(this.GetComponentInParent<CharacterState>(), true);
                 collision.GetComponent<HurtBox>().Hit();
-                FindObjectOfType<FightManager>().UpdateWins(this.transform.parent.tag);
+                FindObjectOfType<FightManager>().UpdateWins(this.transform.parent.GetComponent<CharacterState>().playerNumber);
             }
         }
     }

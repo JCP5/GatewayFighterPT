@@ -1,15 +1,3 @@
-Respawn stystem
- >invul for few seconds
-  -Use bool and change color
- >Dissidia, Smash, Divekick?
-  -Leaning towards Smash
+-Music and Stage picker
+ >Different scene
 
-Win Screen
- >First to 5
- >Rematch
- >Time Up
-
- Ready... Fight!
-  >????
-
-  -B Spawning on same location
