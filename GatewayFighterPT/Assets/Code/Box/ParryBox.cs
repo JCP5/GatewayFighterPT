@@ -16,13 +16,16 @@ namespace Assets.Code.Box
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            if (collision.GetComponent<HitBox>() || collision.GetComponent<ClashBox>())
+            Vector3 contactDir = collision.transform.position - transform.position;
+            Vector3 contactPoint = transform.position + contactDir;
+
+            if (collision.GetComponent<HitBox>() && collision.transform.rotation.y != this.transform.rotation.y || collision.GetComponent<ClashBox>() && collision.transform.rotation.y != this.transform.rotation.y)
             {
-                Instantiate(manager.vfx["Parry"], transform.position, Quaternion.identity);
+                Instantiate(manager.vfx["Parry"], contactPoint, Quaternion.Euler(-90f, 0, 0));
 
-                collision.GetComponentInParent<CharacterState>().activeState = new Parried(collision.GetComponentInParent<CharacterState>());
+                collision.GetComponentInParent<CharacterState>().activeState = new Parried(collision.GetComponentInParent<CharacterState>(), manager.transform);
 
-                manager.AnimationFinish();//Check if grounded and set appropriate state
+                //manager.AnimationFinish();//Check if grounded and set appropriate state
             }
         }
     }

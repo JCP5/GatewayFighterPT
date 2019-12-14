@@ -12,6 +12,8 @@ namespace Assets.Code.FightScene
     {
         public IFightBase activeState;
 
+        public AudioClip defaultBgm;
+
         public GameObject[] characters;
         public UiManager uiManager;
         public EventSystem es;
@@ -39,12 +41,14 @@ namespace Assets.Code.FightScene
             es = FindObjectOfType<EventSystem>();
             inputManager = FindObjectOfType<InputDetector>();
             List<Vector3> used = new List<Vector3>();
-            DetectControllerStart();
 
+            DetectControllerStart();
             IntializeSpawnLocations();
 
             for (int i = 0; i < characters.Length; i++)
             {
+                //characters[] is a GameObject array that houses what characters will be spawned in the scene. 
+                //Will be set by a different class after character selection screen
                 //If changing colours, remember to reset the prefab to white after you spawn
                 characters[i].GetComponent<CharacterState>().PlayerNumber(i + 1);
                 characters[i].GetComponent<CharacterState>().enabled = false;
@@ -86,6 +90,8 @@ namespace Assets.Code.FightScene
             }
         }
 
+        //Temp. Detect which controller is being used and maps the start button accordingly
+        //Possible basis for input management rework
         void DetectControllerStart()
         {
             if (inputManager.joysticks != null)

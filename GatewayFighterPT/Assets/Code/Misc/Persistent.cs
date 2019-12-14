@@ -6,37 +6,17 @@ using UnityEngine.SceneManagement;
 public class Persistent : MonoBehaviour
 {
     public static Persistent instance;
-    public static AudioClip[] ac;
-    public static AudioSource fuck;
+    public AudioSource bgm;
 
-    private void Awake()
+    private void Start()
     {
-        fuck = GetComponent<AudioSource>();
-        if (instance != null)
-        {
-            Destroy(this.gameObject);
-            return;
-        }
-        else
-        {
+        DontDestroyOnLoad(this.gameObject);
+
+        if (instance == null)
             instance = this;
-            DontDestroyOnLoad(this.gameObject);
-        }
-    }
+        else if (instance != this)
+            Destroy(this.gameObject);
 
-    private void Update()
-    {
-        Debug.Log(GetComponent<AudioSource>().clip);
-
-        if (GetComponent<AudioSource>().clip == null)
-            GetComponent<AudioSource>().clip = ac[SceneManager.GetActiveScene().buildIndex];
-    }
-
-    private void OnDestroy()
-    {
-        if (instance == this)
-        {
-            instance = null;
-        }
+        bgm = GetComponent<AudioSource>();
     }
 }

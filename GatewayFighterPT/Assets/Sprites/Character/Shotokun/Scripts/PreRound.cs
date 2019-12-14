@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Assets.Code.FightScene;
 
 namespace Assets.Code.Shoto
 {
@@ -11,7 +12,6 @@ namespace Assets.Code.Shoto
         public PreRound(CharacterState managerRef)
         {
             manager = managerRef;
-
             manager.anim.Play("RoundStart", 0, 0);
         }
 
@@ -22,7 +22,7 @@ namespace Assets.Code.Shoto
 
         public void StateUpdate()
         {
-
+            manager.FaceOpponent(manager.transform.position, Vector3.zero);
         }
     }
 }

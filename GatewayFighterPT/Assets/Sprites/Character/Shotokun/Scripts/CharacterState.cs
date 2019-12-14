@@ -35,6 +35,7 @@ namespace Assets.Code.Shoto
         public bool hzSwitch = false;
         public bool startBuffer = false;
         public int xAxisCounter = 0;
+
         public bool airAttack = false;
         public bool invulToStrike = false;
 
@@ -46,20 +47,20 @@ namespace Assets.Code.Shoto
         void Start()
         {
             vfx = GetComponent<VFXHolder>().vfxPrefabs;
-            id = FindObjectOfType<InputDetector>();
+            //id = FindObjectOfType<InputDetector>();unComment
             doubleBuffer = adjustDoubleBuffer;
             anim = GetComponent<Animator>();
             t = GetComponentInChildren<Text>();
 
             Debug.Log(playerNumber);
-            if (id.joysticks[playerNumber - 1] != null)
-            {
-                myAxisX = gameObject.tag + "_Horizontal" + id.joysticks[playerNumber - 1];
-                myAxisY = gameObject.tag + "_Vertical" + id.joysticks[playerNumber - 1];
-                myAxisAttack = gameObject.tag + "_Fire1" + id.joysticks[playerNumber - 1];
-            }
-            else
-                Debug.LogError("No controller detected");
+            //if (id.joysticks[playerNumber - 1] != null)unComment
+            //{
+                myAxisX = gameObject.tag + "_Horizontal" + "_360";//id.joysticks[playerNumber - 1];
+                myAxisY = gameObject.tag + "_Vertical" + "_360";//id.joysticks[playerNumber - 1];
+                myAxisAttack = gameObject.tag + "_Fire1" + "_360";//id.joysticks[playerNumber - 1];
+            //}
+            //else
+                //Debug.LogError("No controller detected");
 
             if (GetComponent<Rigidbody2D>() != null)
                 rb = GetComponent<Rigidbody2D>();
@@ -72,13 +73,14 @@ namespace Assets.Code.Shoto
         // Update is called once per frame
         void FixedUpdate()
         {
-            //Debug.Log(new Vector2(Input.GetAxis(myAxisX), Input.GetAxis(myAxisY)));
+            if(t.color.a > 0)
+                t.color -= new Color (0, 0, 0, Time.deltaTime * 1f);
             activeState.StateUpdate();
-            //Debug.Log(activeState);
         }
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
+            rb.gravityScale = 5f;
             if (collision.gameObject.tag == "Ground" && grounded == false)
             {
                 grounded = true;
@@ -178,7 +180,7 @@ namespace Assets.Code.Shoto
 
         public void ParryActive()
         {
-            invulToStrike = !invulToStrike;
+            //invulToStrike = !invulToStrike;
         }
 
         //unused so far
@@ -212,6 +214,16 @@ namespace Assets.Code.Shoto
                 this.tag = "P2";
 
             return number;
+        }
+
+        public void FaceOpponent(Vector3 self, Vector3 opponent)
+        {
+            Vector3 direction = opponent - self;
+
+            if (direction.x < 0)
+                transform.rotation = Quaternion.Euler(new Vector3(0, 180, 0));
+            else
+                transform.rotation = Quaternion.Euler(Vector3.zero);
         }
     }
 }

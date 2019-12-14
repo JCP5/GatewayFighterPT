@@ -27,7 +27,7 @@ namespace Assets.Code.FightScene
 
         public void StateUpdate()
         {
-            if (Input.GetKeyDown(manager.p1Start) || Input.GetKeyDown(manager.p2Start))
+            if (Input.GetKeyDown(manager.p1Start) /*|| Input.GetKeyDown(manager.p2Start)*/)
                 manager.PauseGame(manager);
 
             CountDown();

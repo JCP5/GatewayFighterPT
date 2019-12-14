@@ -31,6 +31,8 @@ namespace Assets.Code.ButtonScrollUI
 
         public void Stage(string s)
         {
+            Persistent.instance.bgm.clip = defaultClip;
+            Persistent.instance.bgm.Play();
             Time.timeScale = 1f;
             SceneManager.LoadScene(s);
         }

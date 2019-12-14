@@ -6,15 +6,15 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/WarpedCity.unity
+    path: Assets/Scenes/Stages/WarpedCity.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 1
-    path: Assets/Scenes/Castle.unity
+    path: Assets/Scenes/Stages/Castle.unity
     guid: 5af539af0f36bb6499653891143cb234
   - enabled: 1
-    path: Assets/Scenes/Lab.unity
+    path: Assets/Scenes/Stages/Lab.unity
     guid: c1eb8accff6f9a94181d7d9a25987ffa
   - enabled: 1
-    path: Assets/Scenes/WaterfallRuins.unity
+    path: Assets/Scenes/Stages/WaterfallRuins.unity
     guid: 374fefafd8269934baee2240cdda56ee
   m_configObjects: {}

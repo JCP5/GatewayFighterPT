@@ -20,14 +20,16 @@ public class ClashBox : MonoBehaviour
     }
 
     public void OnTriggerEnter2D(Collider2D collision)
-    {      
+    {
+        CharacterState opponent = collision.GetComponentInParent<CharacterState>();
+
         if (collision.GetComponent<ClashBox>() && collision.transform.parent.tag != this.transform.parent.tag)
         {
             contactDirection = collision.transform.position - myTrans.position;
             contactPoint = myTrans.position + contactDirection;
 
             Instantiate(manager.vfx["Clash"], contactPoint, Quaternion.identity);
-            manager.activeState = new Clash(manager, CalculateFrames(manager.frameCounter, collision.GetComponentInParent<CharacterState>().frameCounter), manager.t);
+            manager.activeState = new Clash(manager, CalculateFrames(manager.frameCounter, opponent.frameCounter), manager.t, opponent.transform);
         }
     }
 
