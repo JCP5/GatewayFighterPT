@@ -23,7 +23,7 @@ namespace Assets.Code.Box
             {
                 Instantiate(manager.vfx["Parry"], contactPoint, Quaternion.Euler(-90f, 0, 0));
 
-                collision.GetComponentInParent<CharacterState>().activeState = new Parried(collision.GetComponentInParent<CharacterState>(), manager.transform);
+                collision.GetComponentInParent<CharacterState>().Parried(collision.GetComponentInParent<CharacterState>(), manager);//.activeState = new Parried(collision.GetComponentInParent<CharacterState>(), manager.transform);
 
                 //manager.AnimationFinish();//Check if grounded and set appropriate state
             }

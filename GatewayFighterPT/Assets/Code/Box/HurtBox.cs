@@ -22,9 +22,7 @@ namespace Assets.Code.Box
 
         public void Hit()
         {
-            manager.activeState = new PostRound(manager, false);
-            Instantiate(manager.vfx["Hit"], transform.position, Quaternion.identity);
-            Debug.Log("Fuck");
+            manager.Hit();
         }
     }
 }

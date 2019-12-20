@@ -7,9 +7,9 @@ namespace Assets.Code.Shoto
 {
     public class PreRound : IShotoBase
     {
-        CharacterState manager;
+        ShotokunManager manager;
 
-        public PreRound(CharacterState managerRef)
+        public PreRound(ShotokunManager managerRef)
         {
             manager = managerRef;
             manager.anim.Play("RoundStart", 0, 0);

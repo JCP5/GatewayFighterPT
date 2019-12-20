@@ -7,11 +7,11 @@ namespace Assets.Code.Shoto
 {
     public class Clash : IShotoBase
     {
-        CharacterState manager;
+        ShotokunManager manager;
         float frameDifference = 0;
         Text text;
 
-        public Clash(CharacterState managerRef, float frameData, Text t, Transform opponentRef)
+        public Clash(ShotokunManager managerRef, float frameData, Text t, Transform opponentRef)
         {
             manager = managerRef;
             frameDifference = frameData;

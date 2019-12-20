@@ -6,14 +6,19 @@ namespace Assets.Code.Shoto
 {
     public class Free : IShotoBase
     {
-        CharacterState manager;
+        ShotokunManager manager;
         bool pressed = true;
         Vector3 myTrans;
 
-        public Free(CharacterState managerRef)
+        public Free(ShotokunManager managerRef)
         {
             manager = managerRef;
             manager.invulToStrike = false; //On animation cancel
+
+            if (Mathf.Abs(Input.GetAxis(manager.myAxisX)) < 0.1f)
+                manager.anim.Play("0_Idle");
+            else
+                manager.anim.Play("1_Run");
         }
 
         public void StateStart()
@@ -31,6 +36,8 @@ namespace Assets.Code.Shoto
 
         void FreeMovement()
         {
+            manager.FlipX();
+
             if (Input.GetAxis(manager.myAxisY) > 0.5f) //Check for jump
             {
                 //add the x and y axis to create the jump vector
@@ -46,6 +53,8 @@ namespace Assets.Code.Shoto
                 {
                     if (pressed == false)
                     {
+                        manager.anim.Play("1_Run");
+
                         if (manager.transform.rotation == Quaternion.Euler(Vector3.zero))
                             manager.vfx["Walk"].GetComponent<ParticleSystemRenderer>().flip = new Vector3(0, 0, 0);
                         else
@@ -55,9 +64,6 @@ namespace Assets.Code.Shoto
                     }
 
                     pressed = true;
-
-                    manager.anim.Play("1_Run");
-                    manager.FlipX();
                 }
                 else if (Mathf.Abs(Input.GetAxis(manager.myAxisX)) == 0)
                 {

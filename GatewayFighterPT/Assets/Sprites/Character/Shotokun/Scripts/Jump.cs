@@ -6,10 +6,10 @@ namespace Assets.Code.Shoto
 {
     public class Jump : IShotoBase
     {
-        CharacterState manager;
+        ShotokunManager manager;
         Vector2 jumpVector;
 
-        public Jump(CharacterState managerRef, Vector2 v)
+        public Jump(ShotokunManager managerRef, Vector2 v)
         {
             jumpVector = v;
             manager = managerRef;

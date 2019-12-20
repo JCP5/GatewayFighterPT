@@ -6,12 +6,12 @@ namespace Assets.Code.Shoto
 {
     public class Dash : IShotoBase
     {
-        CharacterState manager;
+        ShotokunManager manager;
         float direction;
         float strength;
         float dashDuration = 10f / 60f;
 
-        public Dash(CharacterState managerRef, float v)
+        public Dash(ShotokunManager managerRef, float v)
         {
             strength = managerRef.dashStrength;
             manager = managerRef;

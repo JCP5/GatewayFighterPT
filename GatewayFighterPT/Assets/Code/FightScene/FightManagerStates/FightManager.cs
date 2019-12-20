@@ -226,7 +226,7 @@ namespace Assets.Code.FightScene
             foreach (CharacterState cs in sceneCharacters)
             {
                 cs.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-                cs.activeState = new Free(cs);
+                cs.Free();
             }
         }
 
@@ -249,7 +249,7 @@ namespace Assets.Code.FightScene
             {
                 cs.grounded = true;
                 cs.GetComponent<SpriteRenderer>().enabled = true;
-                cs.activeState = new PreRound(cs);
+                cs.PreRound();
                 cs.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
                 cs.transform.position = spawnLocations[cs.playerNumber - 1].position;
             }

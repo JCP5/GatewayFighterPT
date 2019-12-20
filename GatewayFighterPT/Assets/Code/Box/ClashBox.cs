@@ -29,7 +29,7 @@ public class ClashBox : MonoBehaviour
             contactPoint = myTrans.position + contactDirection;
 
             Instantiate(manager.vfx["Clash"], contactPoint, Quaternion.identity);
-            manager.activeState = new Clash(manager, CalculateFrames(manager.frameCounter, opponent.frameCounter), manager.t, opponent.transform);
+            manager.Clash(opponent, CalculateFrames(manager.frameCounter, opponent.frameCounter), contactPoint);//activeState = new Clash(manager, CalculateFrames(manager.frameCounter, opponent.frameCounter), manager.t, opponent.transform);
         }
     }
 

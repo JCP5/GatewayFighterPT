@@ -974,9 +974,9 @@ GameObject:
   - component: {fileID: 458951085829004949}
   - component: {fileID: 458951085829004951}
   - component: {fileID: 458951085829004945}
-  - component: {fileID: 458951085829004946}
-  - component: {fileID: 856243205}
   - component: {fileID: 367227747}
+  - component: {fileID: 1619878380}
+  - component: {fileID: 1630936269}
   m_Layer: 0
   m_Name: Shotokun
   m_TagString: P2
@@ -1094,57 +1094,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
---- !u!114 &458951085829004946
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 458951085829004948}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: caf389e673055f349962a68741ea0688, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  id: {fileID: 0}
-  t: {fileID: 0}
-  myAxisY: 
-  myAxisX: 
-  myAxisAttack: 
-  frameCounter: 0
-  playerNumber: 2
-  moveSpeed: 350
-  jumpStrength: 900
-  dashStrength: 2
-  first: 0
-  second: 0
-  rb: {fileID: 0}
-  airAction: 0
-  adjustDoubleBuffer: 0.2
-  doubleBuffer: 0
-  hzSwitch: 0
-  startBuffer: 0
-  xAxisCounter: 0
-  airAttack: 0
-  invulToStrike: 0
-  grounded: 1
-  anim: {fileID: 0}
---- !u!70 &856243205
-CapsuleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 458951085829004948}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.09}
-  m_Size: {x: 0.2, y: 0.55}
-  m_Direction: 0
 --- !u!114 &367227747
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1165,3 +1114,69 @@ MonoBehaviour:
   - {fileID: 1652429424729231986, guid: d7e5a640dc5d185469c88dd03b766432, type: 3}
   - {fileID: 6722171310393055442, guid: 2e21bd5d9896b0f4aa0157749f95cf4d, type: 3}
   - {fileID: 4018280323154127028, guid: 9046b6e5f29d4f949926136845ba0e8b, type: 3}
+--- !u!114 &1619878380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 458951085829004948}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 804d5fd44e5dc0c47a2aa1c6398a65f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: {fileID: 0}
+  t: {fileID: 0}
+  myAxisY: 
+  myAxisX: 
+  myAxisAttack: 
+  frameCounter: 0
+  playerNumber: 2
+  moveSpeed: 350
+  jumpStrength: 900
+  dashStrength: 2
+  first: 0
+  second: 0
+  rb: {fileID: 0}
+  airAttack: 0
+  invulToStrike: 0
+  grounded: 1
+  anim: {fileID: 458951085829004951}
+  airAction: 0
+  adjustDoubleBuffer: 0.3
+  doubleBuffer: 0
+  hzSwitch: 0
+  startBuffer: 0
+  xAxisCounter: 0
+--- !u!60 &1630936269
+PolygonCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 458951085829004948}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 0.74}
+    newSize: {x: 1, y: 0.74}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: 0, y: 0.2}
+      - {x: 0.1, y: -0.1}
+      - {x: 0.1, y: -0.2}
+      - {x: 0, y: -0.3}
+      - {x: -0.1, y: -0.2}
+      - {x: -0.1, y: -0.1}

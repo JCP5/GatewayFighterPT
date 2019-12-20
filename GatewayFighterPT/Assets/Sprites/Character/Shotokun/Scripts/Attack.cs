@@ -7,13 +7,13 @@ namespace Assets.Code.Shoto
 {
     public class Attack : IShotoBase
     {
-        CharacterState manager;
+        ShotokunManager manager;
         bool attacking;
         public Vector2 aimVector;
         public float waitForStartUp = 4f / 60f;
         public float slashTracking = 12f / 60f;
 
-        public Attack(CharacterState managerRef, Vector2 v2)
+        public Attack(ShotokunManager managerRef, Vector2 v2)
         {
             manager = managerRef;
             attacking = false;
@@ -34,12 +34,21 @@ namespace Assets.Code.Shoto
         {
             waitForStartUp -= Time.fixedDeltaTime;
 
-            if(attacking == true && slashTracking >= 0)//Slash tracking during startup and before active frames
+            Track();
+
+            WhichAttack();
+        }
+
+        void Track()
+        {
+            if (attacking == true && slashTracking >= 0)//Slash tracking during startup and before active frames
             {
-                manager.frameCounter += (1f/60f);
+                manager.frameCounter += (1f / 60f);
                 //Debug.Log(manager.name + " is at " + manager.frameCounter * 60);
                 slashTracking -= Time.fixedDeltaTime;
-                manager.rb.velocity = new Vector2(aimVector.x * manager.moveSpeed * manager.dashStrength * Time.fixedDeltaTime, aimVector.y * manager.moveSpeed * manager.dashStrength * Time.fixedDeltaTime);
+
+                if (aimVector != Vector2.zero)
+                    manager.rb.velocity = new Vector2(aimVector.x * manager.moveSpeed * manager.dashStrength * Time.fixedDeltaTime, aimVector.y * manager.moveSpeed * manager.dashStrength * Time.fixedDeltaTime);
             }
             else if (slashTracking < 0)//Stop tracking once the move is active + remove dashStrength to weaken or stop velocity
             {
@@ -53,7 +62,10 @@ namespace Assets.Code.Shoto
                     manager.airAttack = true;
                 }
             }
+        }
 
+        void WhichAttack()
+        {
             if (waitForStartUp < 0)
             {
                 if (Mathf.Abs(Input.GetAxis(manager.myAxisAttack)) == 1 && attacking == false)//Hold check
@@ -75,7 +87,7 @@ namespace Assets.Code.Shoto
                 {
                     //Was Fire1 released and the Input Axis is < 0.1f?
                     aimVector = Vector2.zero;
-                    //attacking = true; *redundant
+                    attacking = true;
                     manager.anim.Play("6_Parry");
 
                     VelocityDecay(50f);

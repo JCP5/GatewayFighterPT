@@ -6,10 +6,10 @@ namespace Assets.Code.Shoto
 {
     public class Parried : IShotoBase
     {
-        CharacterState manager;
+        ShotokunManager manager;
         Transform opponent;
 
-        public Parried(CharacterState managerRef, Transform opponentRef)
+        public Parried(ShotokunManager managerRef, Transform opponentRef)
         {
             manager = managerRef;
             opponent = opponentRef;

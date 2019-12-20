@@ -1,34 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System;
 using UnityEngine;
 using UnityEngine.UI;
-using Assets.Code.MiscManagers;
-using Assets.Code.FightScene;
-using Assets.Code.Effects;
 
 namespace Assets.Code.Shoto
 {
-    public class CharacterState : MonoBehaviour
+    public class ShotokunManager : CharacterState
     {
         public IShotoBase activeState;
-        public InputDetector id;
-        public Text t;
-        public Dictionary<string, GameObject> vfx;
 
-        public string myAxisY;
-        public string myAxisX;
-        public string myAxisAttack;
-        public float frameCounter = 0;
-
-        public int playerNumber;
-        public float moveSpeed = 10;
-        public float jumpStrength = 10;
-        public float dashStrength = 100;
-        public float first;
-        public float second;
-        public Rigidbody2D rb;
-
+        //dash stuff
         public bool airAction = false;
         public float adjustDoubleBuffer = 0.3f;
         public float doubleBuffer;
@@ -36,36 +17,11 @@ namespace Assets.Code.Shoto
         public bool startBuffer = false;
         public int xAxisCounter = 0;
 
-        public bool airAttack = false;
-        public bool invulToStrike = false;
-
-        public bool grounded = true;
-
-        public Animator anim;
-
         // Start is called before the first frame update
         void Start()
         {
-            vfx = GetComponent<VFXHolder>().vfxPrefabs;
-            //id = FindObjectOfType<InputDetector>();unComment
+            base.Start();
             doubleBuffer = adjustDoubleBuffer;
-            anim = GetComponent<Animator>();
-            t = GetComponentInChildren<Text>();
-
-            Debug.Log(playerNumber);
-            //if (id.joysticks[playerNumber - 1] != null)unComment
-            //{
-                myAxisX = gameObject.tag + "_Horizontal" + "_360";//id.joysticks[playerNumber - 1];
-                myAxisY = gameObject.tag + "_Vertical" + "_360";//id.joysticks[playerNumber - 1];
-                myAxisAttack = gameObject.tag + "_Fire1" + "_360";//id.joysticks[playerNumber - 1];
-            //}
-            //else
-                //Debug.LogError("No controller detected");
-
-            if (GetComponent<Rigidbody2D>() != null)
-                rb = GetComponent<Rigidbody2D>();
-            else
-                Debug.LogError("RigidBody is missing");
 
             activeState = new Free(this);
         }
@@ -73,14 +29,21 @@ namespace Assets.Code.Shoto
         // Update is called once per frame
         void FixedUpdate()
         {
-            if(t.color.a > 0)
-                t.color -= new Color (0, 0, 0, Time.deltaTime * 1f);
+            if (t.color.a > 0)
+                t.color -= new Color(0, 0, 0, Time.deltaTime * 1f);
+
             activeState.StateUpdate();
         }
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            rb.gravityScale = 5f;
+            if (rb != null)
+                rb.gravityScale = 5f;
+            else
+            {
+                rb = GetComponent<Rigidbody2D>();
+                rb.gravityScale = 5f;
+            }
             if (collision.gameObject.tag == "Ground" && grounded == false)
             {
                 grounded = true;
@@ -90,7 +53,6 @@ namespace Assets.Code.Shoto
                 if ((activeState is Jump || activeState is Dash))
                     activeState = new Free(this);
             }
-
         }
 
         private void OnCollisionExit2D(Collision2D collision)
@@ -152,20 +114,44 @@ namespace Assets.Code.Shoto
             }
         }
 
-        public void FlipX()
-        {
-            if (Input.GetAxis(myAxisX) > 0)
-                transform.rotation = Quaternion.Euler(Vector3.zero);
-            else if (Input.GetAxis(myAxisX) < 0)
-                transform.rotation = Quaternion.Euler(new Vector3 (0, 180, 0));
-        }
-
         public void AttackCheck()
         {
             if (Input.GetAxisRaw(myAxisAttack) == 1)
             {
-                activeState = new Attack(this, new Vector2 (Mathf.Round(Input.GetAxisRaw(myAxisX)), Mathf.Round(Input.GetAxisRaw(myAxisY))));
+                activeState = new Attack(this, new Vector2(Mathf.Round(Input.GetAxisRaw(myAxisX)), Mathf.Round(Input.GetAxisRaw(myAxisY))));
             }
+        }
+
+        public override void Hit()
+        {
+            activeState = new PostRound(this, false);
+            Instantiate(vfx["Hit"], transform.position, Quaternion.identity);
+            Debug.Log("Fuck");
+        }
+
+        public override void HitBox()
+        {
+            activeState = new PostRound(this, true);
+        }
+
+        public override void Clash(CharacterState opponent, float frames, Vector3 contactpoint)
+        {
+            activeState = new Clash(this, frames, this.t, opponent.transform);
+        }
+
+        public override void Parried(CharacterState self, CharacterState opponent)
+        {
+            activeState = new Parried(this, opponent.transform);
+        }
+
+        public override void Free()
+        {
+            activeState = new Free(this);
+        }
+
+        public override void PreRound()
+        {
+            activeState = new PreRound(this);
         }
 
         public void AnimationFinish()
@@ -178,31 +164,7 @@ namespace Assets.Code.Shoto
             invulToStrike = false;
         }
 
-        public void ParryActive()
-        {
-            //invulToStrike = !invulToStrike;
-        }
-
-        //unused so far
-        public void ForceAttack()
-        {
-            Debug.Log("Hello");
-            if(Mathf.Abs(Input.GetAxis(myAxisX)) != 1)
-            {
-                anim.SetInteger("AnimState", 6);
-                AnimationFinish();
-            }
-            else
-            {
-                anim.SetInteger("AnimState", 5);
-                AnimationFinish();
-            }
-        }
-
-        //playerNumber will be set by FightManager on Fight Start***
-        //use playerNumber to get index of corresponding controller type in InputDetector
-        //so if the player number is 1 then get the joystick at InputDetector.joysticks[1];
-        public int PlayerNumber(int i)
+        /*public int PlayerNumber(int i)
         {
             int number = i;
 
@@ -224,6 +186,6 @@ namespace Assets.Code.Shoto
                 transform.rotation = Quaternion.Euler(new Vector3(0, 180, 0));
             else
                 transform.rotation = Quaternion.Euler(Vector3.zero);
-        }
+        }*/
     }
 }
