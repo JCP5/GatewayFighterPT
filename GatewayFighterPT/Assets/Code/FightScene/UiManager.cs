@@ -37,8 +37,8 @@ namespace Assets.Code.FightScene
 
        public void Resume()
         {
-            fm.activeState = new Fight(fm);
             Time.timeScale = 1f;
+            fm.activeState = new Fight(fm);
             fm.paused = false;
             SearchElements("Pause").gameObject.SetActive(false);
         }

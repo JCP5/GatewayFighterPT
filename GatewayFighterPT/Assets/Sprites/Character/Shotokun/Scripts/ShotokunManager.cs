@@ -8,14 +8,17 @@ namespace Assets.Code.Shoto
     public class ShotokunManager : CharacterState
     {
         public IShotoBase activeState;
+        public float diStrength = 1f;
 
         //dash stuff
-        public bool airAction = false;
         public float adjustDoubleBuffer = 0.3f;
         public float doubleBuffer;
         public bool hzSwitch = false;
         public bool startBuffer = false;
         public int xAxisCounter = 0;
+        public float airDashModifier = 1f;
+
+        public bool helmbreaker = false;
 
         // Start is called before the first frame update
         void Start()
@@ -46,12 +49,22 @@ namespace Assets.Code.Shoto
             }
             if (collision.gameObject.tag == "Ground" && grounded == false)
             {
+                rb.velocity = Vector2.zero;
                 grounded = true;
                 airAttack = false;
                 airAction = false;
 
-                if ((activeState is Jump || activeState is Dash))
-                    activeState = new Free(this);
+                if (helmbreaker == true)
+                {
+                    Debug.Log("So Hype");
+                    helmbreaker = false;
+                    anim.Play("HelmBreakerFinish");
+                }
+                else
+                {
+                    if ((activeState is Jump || activeState is Dash))
+                        activeState = new Free(this);
+                }
             }
         }
 
@@ -156,6 +169,7 @@ namespace Assets.Code.Shoto
 
         public void AnimationFinish()
         {
+            rb.gravityScale = gravityScale;
             if (grounded == true)
                 activeState = new Free(this);
             else if (grounded == false)

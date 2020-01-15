@@ -6,32 +6,29 @@ namespace Assets.Code.TimeCop
 {
     public class Throw : MonoBehaviour
     {
-        TimeCopManager timeCop;
         Vector2 direction;
+        Rigidbody2D rb;
+        public float distance = 3f;
         public float moveSpeed = 10f;
         public bool thrown = false;
 
         // Start is called before the first frame update
         void Start()
         {
-            if (transform.parent != null)
-                timeCop = GetComponentInParent<TimeCopManager>();
-            else
-                Debug.LogError("TimeCop not found");
-
             transform.parent = null;
             direction = Vector2.zero;
+            rb = this.GetComponent<Rigidbody2D>();
         }
 
-        // Update is called once per frame
-        void FixedUpdate()
+        private void FixedUpdate()
         {
-            transform.position += new Vector3(direction.x * Time.fixedDeltaTime * moveSpeed, direction.y * Time.fixedDeltaTime * moveSpeed, 0);
+
         }
 
         public void SetDirection(Vector2 dir)
         {
             direction = dir;
+            rb.AddForce(new Vector2(dir.x * moveSpeed, dir.y * moveSpeed), ForceMode2D.Impulse);
         }
     }
 }

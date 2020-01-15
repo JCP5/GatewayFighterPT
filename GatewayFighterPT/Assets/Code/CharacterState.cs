@@ -26,7 +26,9 @@ public class CharacterState : MonoBehaviour
     public float first;
     public float second;
     public Rigidbody2D rb;
+    public float gravityScale = 5;
 
+    public bool airAction = false;
     public bool airAttack = false;
     public bool invulToStrike = false;
 
@@ -43,14 +45,17 @@ public class CharacterState : MonoBehaviour
         t = GetComponentInChildren<Text>();
 
         Debug.Log(playerNumber);
-        if (id.joysticks[playerNumber - 1] != null)//unComment
+
+        UsePS3ControllerForTesting();
+
+        /*if (id.joysticks[playerNumber - 1] != null)//unComment
         {
-            myAxisX = gameObject.tag + "_Horizontal" + /*"_360";*/id.joysticks[playerNumber - 1];
-            myAxisY = gameObject.tag + "_Vertical" + /*"_360";*/id.joysticks[playerNumber - 1];
-            myAxisAttack = gameObject.tag + "_Fire1" + /*"_360";*/id.joysticks[playerNumber - 1];
+            myAxisX = gameObject.tag + "_Horizontal" + "_360";/*id.joysticks[playerNumber - 1];
+            myAxisY = gameObject.tag + "_Vertical" + "_360";/*id.joysticks[playerNumber - 1];
+            myAxisAttack = gameObject.tag + "_Fire1" + "_360";/*id.joysticks[playerNumber - 1];
         }
         else
-            Debug.LogError("No controller detected");
+            Debug.LogError("No controller detected");*/
 
         if (GetComponent<Rigidbody2D>() != null)
             rb = GetComponent<Rigidbody2D>();
@@ -67,6 +72,15 @@ public class CharacterState : MonoBehaviour
             t.color -= new Color(0, 0, 0, Time.deltaTime * 1f);
 
         //activeState.StateUpdate();
+    }
+
+    //Testing Only
+    void UsePS3ControllerForTesting()
+    {
+        Debug.Log("Currently in testing mode. Deactivate later");
+        myAxisX = gameObject.tag + "_Horizontal" + "_360";/*id.joysticks[playerNumber - 1];*/
+        myAxisY = gameObject.tag + "_Vertical" + "_360";/*id.joysticks[playerNumber - 1];*/
+        myAxisAttack = gameObject.tag + "_Fire1" + "_360";/*id.joysticks[playerNumber - 1];*/
     }
 
     public virtual void Hit()
@@ -99,19 +113,20 @@ public class CharacterState : MonoBehaviour
 
     }
 
-    /*private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        rb.gravityScale = 5f;
-        if (collision.gameObject.tag == "Ground" && grounded == false)
-        {
-            grounded = true;
-            airAttack = false;
-            airAction = false;
+        rb.gravityScale = gravityScale;
+    }
 
-            if ((activeState is Jump || activeState is Dash))
-                activeState = new Free(this);
-        }
-    }*/
+    public void ResetGravityScale()
+    {
+        rb.gravityScale = gravityScale;
+    }
+
+    public Vector2 InputAxes()
+    {
+        return new Vector2(Input.GetAxis(myAxisX), Input.GetAxis(myAxisY));
+    }
 
     /*private void OnCollisionExit2D(Collision2D collision)
     {

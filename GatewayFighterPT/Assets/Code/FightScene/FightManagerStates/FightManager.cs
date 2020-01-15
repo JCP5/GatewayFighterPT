@@ -38,7 +38,11 @@ namespace Assets.Code.FightScene
         // Start is called before the first frame update
         void Start()
         {
-            es = FindObjectOfType<EventSystem>();
+            if (FindObjectOfType<EventSystem>() != null)
+                es = FindObjectOfType<EventSystem>();
+            else
+                Debug.LogError("EventSystem not found");
+
             inputManager = FindObjectOfType<InputDetector>();
             List<Vector3> used = new List<Vector3>();
 
@@ -96,22 +100,22 @@ namespace Assets.Code.FightScene
         {
             if (inputManager.joysticks != null)
             {
-                if (inputManager.joysticks[0] == "_PS4")
-                {
-                    p1Start = "joystick 1 button 9";
-                }
-                else if (inputManager.joysticks[0] == "_360")
+                if (inputManager.joysticks[0] == "_360")
                 {
                     p1Start = "joystick 1 button 7";
                 }
-
-                if (inputManager.joysticks[1] == "_PS4")
+                else
                 {
-                    p2Start = "joystick 2 button 9";
+                    p1Start = "joystick 1 button 9";
                 }
-                else if (inputManager.joysticks[1] == "_360")
+
+                if (inputManager.joysticks[1] == "_360")
                 {
                     p2Start = "joystick 2 button 7";
+                }
+                else
+                {
+                    p2Start = "joystick 2 button 9";
                 }
             }
         }
@@ -247,6 +251,7 @@ namespace Assets.Code.FightScene
         {
             foreach (CharacterState cs in sceneCharacters)
             {
+                cs.ResetGravityScale();
                 cs.grounded = true;
                 cs.GetComponent<SpriteRenderer>().enabled = true;
                 cs.PreRound();

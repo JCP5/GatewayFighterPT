@@ -52,8 +52,8 @@ namespace Assets.Code.Shoto
 
                     if (Input.GetAxis(manager.myAxisY) > 0.5f)
                     {
-                        manager.rb.velocity = new Vector2(manager.moveSpeed * strength * direction * Time.fixedDeltaTime, Mathf.Round(Input.GetAxis(manager.myAxisY)) * manager.jumpStrength * Time.fixedDeltaTime);
-                        manager.activeState = new Jump(manager, manager.rb.velocity);
+                        //manager.rb.velocity = new Vector2(manager.moveSpeed * strength * direction * Time.fixedDeltaTime, Mathf.Round(Input.GetAxis(manager.myAxisY)) * manager.jumpStrength * Time.fixedDeltaTime);
+                        manager.activeState = new Jump(manager, new Vector2(Mathf.Round(Input.GetAxis(manager.myAxisX) * manager.dashStrength), Mathf.Round(Input.GetAxis(manager.myAxisY))));
                     }
                 }
                 else
@@ -66,7 +66,7 @@ namespace Assets.Code.Shoto
                     dashDuration -= Time.fixedDeltaTime;
                     manager.airAction = true;
                     manager.rb.gravityScale = 0;
-                    manager.rb.velocity = new Vector2(manager.moveSpeed * strength / 1f * direction * Time.fixedDeltaTime, 0);
+                    manager.rb.velocity = new Vector2(manager.moveSpeed * strength / manager.airDashModifier * direction * Time.fixedDeltaTime, 0);
 
                     manager.anim.Play("9_AirDash");
                 }

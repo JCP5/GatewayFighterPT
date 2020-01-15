@@ -17,13 +17,14 @@ namespace Assets.Code.MiscManagers
             for (int i = 0; i < joysticks.Length; i++)
             {
                 Debug.Log(joysticks[i]);
-                if (joysticks[i].IndexOf("PS4", StringComparison.OrdinalIgnoreCase) >= 0)
-                {
-                    joysticks[i] = "_PS4";
-                }
-                else if (joysticks[i].IndexOf("360", StringComparison.OrdinalIgnoreCase) >= 0)
+
+                if (joysticks[i].IndexOf("360", StringComparison.OrdinalIgnoreCase) >= 0)
                 {
                     joysticks[i] = "_360";
+                }
+                else
+                {
+                    joysticks[i] = "_PS4";
                 }
             }
         }

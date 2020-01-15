@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Stages/WaterfallRuins.unity
     guid: 374fefafd8269934baee2240cdda56ee
+  - enabled: 1
+    path: Assets/Scenes/Stages/MoonlitPond.unity
+    guid: 64744c44f6e61d84082fecc7c42359dd
   m_configObjects: {}

@@ -1133,22 +1133,25 @@ MonoBehaviour:
   myAxisAttack: 
   frameCounter: 0
   playerNumber: 2
-  moveSpeed: 350
+  moveSpeed: 500
   jumpStrength: 900
-  dashStrength: 2
+  dashStrength: 1.5
   first: 0
   second: 0
   rb: {fileID: 0}
+  gravityScale: 5
+  airAction: 0
   airAttack: 0
   invulToStrike: 0
   grounded: 1
   anim: {fileID: 458951085829004951}
-  airAction: 0
-  adjustDoubleBuffer: 0.3
+  diStrength: 10
+  adjustDoubleBuffer: 0.2
   doubleBuffer: 0
   hzSwitch: 0
   startBuffer: 0
   xAxisCounter: 0
+  airDashModifier: 1.15
 --- !u!60 &1630936269
 PolygonCollider2D:
   m_ObjectHideFlags: 0

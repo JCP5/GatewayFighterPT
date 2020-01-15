@@ -41,8 +41,8 @@ namespace Assets.Code.Shoto
             if (Input.GetAxis(manager.myAxisY) > 0.5f) //Check for jump
             {
                 //add the x and y axis to create the jump vector
-                manager.rb.velocity = new Vector2(Mathf.Round(Input.GetAxis(manager.myAxisX)) * manager.moveSpeed * Time.fixedDeltaTime, Mathf.Round(Input.GetAxis(manager.myAxisY)) * manager.jumpStrength * Time.fixedDeltaTime);
-                manager.activeState = new Jump(manager, manager.rb.velocity);
+                //manager.rb.velocity = new Vector2(Mathf.Round(Input.GetAxis(manager.myAxisX)) * manager.moveSpeed * Time.fixedDeltaTime, Mathf.Round(Input.GetAxis(manager.myAxisY)) * manager.jumpStrength * Time.fixedDeltaTime); ?? Why does this work?
+                manager.activeState = new Jump(manager, new Vector2(Mathf.Round(Input.GetAxis(manager.myAxisX)), Mathf.Round(Input.GetAxis(manager.myAxisY))));
             }
             else //No input on the Y axis
             {
