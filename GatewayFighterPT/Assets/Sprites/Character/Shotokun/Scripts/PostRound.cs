@@ -1,14 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Assets.Code.CharacterControl;
 
 namespace Assets.Code.Shoto
 {
-    public class PostRound : IShotoBase
+    public class PostRound : ICharacterBase
     {
-        CharacterState manager;
+        ShotokunManager manager;
 
-        public PostRound(CharacterState managerRef, bool victory)
+        public PostRound(ShotokunManager managerRef, bool victory)
         {
             manager = managerRef;
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Assets.Code.Shoto;
 using Assets.Code.Effects;
+using Assets.Code.CharacterControl;
 
 public class ClashBox : MonoBehaviour
 {

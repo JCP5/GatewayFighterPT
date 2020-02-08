@@ -431,7 +431,7 @@ GameObject:
   - component: {fileID: 119890425}
   - component: {fileID: 119890427}
   m_Layer: 0
-  m_Name: Platform
+  m_Name: Ground
   m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2263,6 +2263,30 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 956274881, guid: ebd00b17034db9c4e8f145465e51efac, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275823838, guid: ebd00b17034db9c4e8f145465e51efac, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275823838, guid: ebd00b17034db9c4e8f145465e51efac, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275823838, guid: ebd00b17034db9c4e8f145465e51efac, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275823838, guid: ebd00b17034db9c4e8f145465e51efac, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275823838, guid: ebd00b17034db9c4e8f145465e51efac, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275823838, guid: ebd00b17034db9c4e8f145465e51efac, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}

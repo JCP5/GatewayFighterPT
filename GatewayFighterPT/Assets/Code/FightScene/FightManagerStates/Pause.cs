@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using Assets.Code.MiscManagers;
-using Assets.Code.Shoto;
+using Assets.Code.CharacterControl;
 
 namespace Assets.Code.FightScene
 {

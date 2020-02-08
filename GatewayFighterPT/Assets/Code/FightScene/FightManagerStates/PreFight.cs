@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Assets.Code.Shoto;
+using Assets.Code.CharacterControl;
 
 namespace Assets.Code.FightScene
 {

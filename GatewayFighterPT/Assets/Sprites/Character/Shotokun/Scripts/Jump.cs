@@ -1,20 +1,26 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Assets.Code.CharacterControl;
 
 namespace Assets.Code.Shoto
 {
-    public class Jump : IShotoBase
+    public class Jump : ICharacterBase
     {
         ShotokunManager manager;
         Vector2 jumpVector;
         float waitForStartup = 3f / 60f;
         float xVelocity;
+        float originY = 0f;
+        float peak = 0f;
 
         public Jump(ShotokunManager managerRef, Vector2 v)
         {
             manager = managerRef;
+            manager.rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+            originY = manager.transform.position.y;
             jumpVector = new Vector2(v.x * manager.moveSpeed, v.y * manager.jumpStrength);
+            //Debug.Log(v);
 
             if (manager.grounded == true)
             {
@@ -35,7 +41,6 @@ namespace Assets.Code.Shoto
         // Update is called once per frame
         public void StateUpdate()
         {
-            manager.DashCheck();
             manager.FlipX();
 
             if (manager.airAttack == false)
@@ -47,9 +52,10 @@ namespace Assets.Code.Shoto
             }
             else if (waitForStartup <= 0 && manager.grounded == true)
             {
-                //The force is applied twice for some reason
-                manager.rb.AddForce(jumpVector / 2, ForceMode2D.Force);
+                manager.rb.AddForce(jumpVector, ForceMode2D.Force);
+                manager.gameObject.layer = 10;
                 manager.anim.Play("2_Jump", -1, 0);
+                manager.grounded = false;
             }
         }
     }

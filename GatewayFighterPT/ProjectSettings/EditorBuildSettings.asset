@@ -20,4 +20,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Stages/MoonlitPond.unity
     guid: 64744c44f6e61d84082fecc7c42359dd
+  - enabled: 1
+    path: Assets/Scenes/Stages/SpaceShip.unity
+    guid: da4b78d025747ae43a84bcc6c96aabd1
+  - enabled: 1
+    path: Assets/Scenes/Stages/StrangeSwamp.unity
+    guid: 3b7ee19dc566b164e95585d44cc54bce
   m_configObjects: {}

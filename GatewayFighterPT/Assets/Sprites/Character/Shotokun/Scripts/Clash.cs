@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Assets.Code.CharacterControl;
 
 namespace Assets.Code.Shoto
 {
-    public class Clash : IShotoBase
+    public class Clash : ICharacterBase
     {
         ShotokunManager manager;
         float frameDifference = 0;
@@ -16,6 +17,7 @@ namespace Assets.Code.Shoto
             manager = managerRef;
             frameDifference = frameData;
             text = t;
+            manager.ResetGravityScale();
 
             Vector2 opponentDir = opponentRef.position - manager.transform.position;
             Vector2 forceVector = new Vector2(opponentDir.x / Mathf.Abs(opponentDir.x), 0) - new Vector2(0, opponentDir.y);

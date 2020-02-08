@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Assets.Code.CharacterControl;
 
 namespace Assets.Code.Shoto
 {
-    public class Parried : IShotoBase
+    public class Parried : ICharacterBase
     {
         ShotokunManager manager;
         Transform opponent;
@@ -13,6 +14,7 @@ namespace Assets.Code.Shoto
         {
             manager = managerRef;
             opponent = opponentRef;
+            manager.ResetGravityScale();
 
             Vector2 opponentVector = opponent.position - manager.transform.position;
             Vector2 forceVector = new Vector2(opponentVector.x / Mathf.Abs(opponentVector.x), 0) - new Vector2(0, opponentVector.y);

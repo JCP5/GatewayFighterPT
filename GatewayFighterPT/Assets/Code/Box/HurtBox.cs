@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Assets.Code.Shoto;
 using Assets.Code.FightScene;
 using Assets.Code.Effects;
+using Assets.Code.CharacterControl;
 
 namespace Assets.Code.Box
 {

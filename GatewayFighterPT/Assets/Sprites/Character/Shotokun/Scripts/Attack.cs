@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Assets.Code.Box;
+using Assets.Code.CharacterControl;
 
 namespace Assets.Code.Shoto
 {
-    public class Attack : IShotoBase
+    public class Attack : ICharacterBase
     {
         ShotokunManager manager;
         bool attacking;
         public Vector2 aimVector;
-        public float waitForStartUp = 4f / 60f;
+        public float startUp = 10f;
+        public float inputDelay = 4f / 60f;
         public float slashTracking = 12f / 60f;
         float diModifier = 1;
 
@@ -20,6 +22,8 @@ namespace Assets.Code.Shoto
             attacking = false;
             aimVector = v2;
             manager.frameCounter = 0;
+            //false on construct so I can control when and which attacks can be cancelled using the Animation Event Manager.DashCancellable
+            manager.dashCancel = false;
 
             manager.FlipX();
         }
@@ -33,12 +37,17 @@ namespace Assets.Code.Shoto
         // Update is called once per frame
         public void StateUpdate()
         {
-            waitForStartUp -= Time.fixedDeltaTime;
-            Debug.Log(attacking);
-
             Track();
-
             WhichAttack();
+            /*if(manager.rb.velocity.normalized.y < 0)
+            {
+                manager.gameObject.layer = 8;
+            }*/
+
+            if (inputDelay > 0)
+                inputDelay -= Time.fixedDeltaTime;
+            if (startUp > 0)
+                startUp -= Time.fixedDeltaTime;
         }
 
         void Track()
@@ -47,12 +56,21 @@ namespace Assets.Code.Shoto
             {
                 manager.frameCounter += (1f / 60f);
                 //Debug.Log(manager.name + " is at " + manager.frameCounter * 60);
-                slashTracking -= Time.fixedDeltaTime;
+                slashTracking -= 1f/60f;
 
                 if (aimVector != Vector2.zero)
                 {
-                    manager.rb.velocity = new Vector2(aimVector.x * 350f/*old moveSpeed*/ * 2f/*old dashStrength*/ * Time.fixedDeltaTime, aimVector.y * 350f * 2f * Time.fixedDeltaTime)
-                        + DiCalculation(diModifier);
+                    if (startUp <= 0)
+                    {
+                        manager.rb.velocity = new Vector2(aimVector.x * 350f/*old moveSpeed*/ * 2f/*old dashStrength*/ * Time.fixedDeltaTime, aimVector.y * 350f * 2f * Time.fixedDeltaTime)
+                            + DiCalculation(diModifier);
+
+                        if (aimVector.y > 0)
+                        {
+                            manager.grounded = false;
+                            manager.gameObject.layer = 10;//sloppy
+                        }
+                    }
                 }
             }
             else if (slashTracking < 0)//Stop tracking once the move is active + remove dashStrength to weaken or stop velocity
@@ -94,30 +112,27 @@ namespace Assets.Code.Shoto
 
         void WhichAttack()
         {
-            if (waitForStartUp < 0)
+            if (inputDelay < 0)
             {
                 if (Mathf.Abs(Input.GetAxis(manager.myAxisAttack)) == 1 && attacking == false)//Hold check
                 {
-                    if (Mathf.Abs(manager.rb.velocity.x) <= 20f)
-                        AttackDash();
+                    manager.rb.constraints = RigidbodyConstraints2D.FreezeRotation;
 
+                    manager.helmbreaker = false;
+                    manager.risingSlash = false;
                     manager.anim.Play("4_Hold");
                     aimVector = new Vector2(Mathf.Round(Input.GetAxisRaw(manager.myAxisX)), Mathf.Round(Input.GetAxisRaw(manager.myAxisY)));
-
+                    
                     VelocityDecay(50f);
-                }
-                else if ((Input.GetAxis(manager.myAxisAttack) != 1 && Mathf.Abs(Input.GetAxis(manager.myAxisX)) > 0.5f || (Mathf.Abs(Input.GetAxis(manager.myAxisX)) > 0.5f && Mathf.Abs(Input.GetAxis(manager.myAxisY)) > 0.5f)) && attacking == false)//slash check
-                {
-                    //was Fire1 released and the Input Axis X is > 0.5f?
-                    diModifier = 1;
-                    attacking = true;
-                    manager.anim.Play("5_Slash");
                 }
                 else if (Mathf.Abs(Input.GetAxis(manager.myAxisAttack)) != 1 && Mathf.Abs(Input.GetAxis(manager.myAxisX)) < 0.1f && Mathf.Abs(Input.GetAxis(manager.myAxisY)) < 0.1f && attacking == false)//parry check
                 {
                     //Was Fire1 released and both Input Axes are < 0.1f?
+                    manager.rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+                    startUp = 0f;
                     aimVector = Vector2.zero;
                     attacking = true;
+                    manager.helmbreaker = false;
                     manager.anim.Play("6_Parry");
 
                     VelocityDecay(50f);
@@ -125,7 +140,9 @@ namespace Assets.Code.Shoto
                 else if (Mathf.Abs(Input.GetAxis(manager.myAxisAttack)) != 1 && Mathf.Abs(Input.GetAxis(manager.myAxisX)) < 0.1f && Input.GetAxis(manager.myAxisY) > 0.5f && attacking == false)//rising slash check
                 {
                     //Was Fire1 released and X is < 0.1f and Y > 0.5f?
+                    manager.rb.constraints = RigidbodyConstraints2D.FreezeRotation;
                     diModifier = 0.5f;
+                    startUp = 7f / 60f;
 
                     if(CheckDirection(manager.transform) == "right")
                         aimVector = new Vector2(0.1f, 1);
@@ -133,16 +150,34 @@ namespace Assets.Code.Shoto
                         aimVector = new Vector2(-0.1f, 1);
 
                     attacking = true;
+                    manager.risingSlash = true;
+                    manager.helmbreaker = false;
                     manager.anim.Play("RisingSlash");
                 }
                 else if (Mathf.Abs(Input.GetAxis(manager.myAxisAttack)) != 1 && Mathf.Abs(Input.GetAxis(manager.myAxisX)) < 0.1f && Input.GetAxis(manager.myAxisY) < 0.5f && attacking == false && manager.grounded == false)//Helm Breaker check
                 {
-                    diModifier = 0.5f;
+                    manager.rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+                    diModifier = 1f;
                     manager.helmbreaker = true;
+                    manager.risingSlash = false;
 
-                    aimVector = -Vector2.up; 
+                    manager.rb.velocity = Vector2.zero;
+                    startUp = 7f / 60f;
+                    aimVector = new Vector2(0, -1f); 
                     attacking = true;
                     manager.anim.Play("HelmBreaker");
+                }
+                else if (Mathf.Abs(Input.GetAxis(manager.myAxisAttack)) != 1 && (Mathf.Abs(Input.GetAxis(manager.myAxisX)) > 0.5f ||  Mathf.Abs(Input.GetAxis(manager.myAxisY)) > 0.5f) && attacking == false)//slash check
+                {
+                    //was Fire1 released and the Input Axis X is > 0.5f?
+                    manager.rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+                    startUp = 0f;
+                    slashTracking = 8f / 60f;
+                    aimVector = new Vector2(Mathf.Round(Input.GetAxis(manager.myAxisX)), Mathf.Round(Input.GetAxis(manager.myAxisY)));
+                    diModifier = 1;
+                    attacking = true;
+                    manager.helmbreaker = false;
+                    manager.anim.Play("5_Slash");
                 }
             }
         }
@@ -161,6 +196,9 @@ namespace Assets.Code.Shoto
             {
                 if (Mathf.Abs(manager.rb.velocity.x) <= 1)
                 {
+                    if (Mathf.Abs(manager.CalculateGroundAngle().y) > 0)
+                        manager.rb.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
+
                     manager.rb.velocity = Vector2.zero;
                 }
                 //Decay velocity until Abs(manager.rb.velocity.x) <= 1 then set to Vector2.zero
@@ -180,13 +218,14 @@ namespace Assets.Code.Shoto
             }
         }
 
-        void AttackDash()
+        /*void AttackDash()
         {
             if (manager.airAction == false)
             {
                 if (manager.xAxisCounter >= 2 && manager.first != 0 && manager.first == manager.second)
                 {
                     manager.xAxisCounter = 0;
+                    manager.rb.velocity = Vector2.zero;
                     manager.rb.AddForce(new Vector2(20f * manager.first, 0), ForceMode2D.Impulse);
                     manager.anim.Play("3_Dash");
                 }
@@ -229,6 +268,6 @@ namespace Assets.Code.Shoto
                     manager.hzSwitch = false;
                 }
             }
-        }
+        }*/
     }
 }

@@ -2,29 +2,33 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Assets.Code.CharacterControl;
 
 namespace Assets.Code.Shoto
 {
     public class ShotokunManager : CharacterState
     {
-        public IShotoBase activeState;
+        public ICharacterBase activeState;
         public float diStrength = 1f;
 
         //dash stuff
-        public float adjustDoubleBuffer = 0.3f;
+        /*public float adjustDoubleBuffer = 0.3f;
         public float doubleBuffer;
         public bool hzSwitch = false;
         public bool startBuffer = false;
-        public int xAxisCounter = 0;
+        public int xAxisCounter = 0;*/
         public float airDashModifier = 1f;
+        public bool dashCancel = true;
 
         public bool helmbreaker = false;
+        public bool risingSlash = false;
 
         // Start is called before the first frame update
         void Start()
         {
             base.Start();
-            doubleBuffer = adjustDoubleBuffer;
+            inputManager.DashEvent += DashCheck;
+            //doubleBuffer = adjustDoubleBuffer;
 
             activeState = new Free(this);
         }
@@ -32,14 +36,23 @@ namespace Assets.Code.Shoto
         // Update is called once per frame
         void FixedUpdate()
         {
-            if (t.color.a > 0)
-                t.color -= new Color(0, 0, 0, Time.deltaTime * 1f);
+            base.FixedUpdate();
 
             activeState.StateUpdate();
+
+            if (!(activeState is Jump || activeState is Attack/*sloppy*/) && passThrough == false)
+                gameObject.layer = 8;
+            else if (passThrough == true)
+                gameObject.layer = 10;
         }
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
+            Vector3 contactDirection = Vector3.zero;
+
+            if (rb != null)
+                contactDirection = collision.contacts[0].point - rb.position;
+
             if (rb != null)
                 rb.gravityScale = 5f;
             else
@@ -47,39 +60,55 @@ namespace Assets.Code.Shoto
                 rb = GetComponent<Rigidbody2D>();
                 rb.gravityScale = 5f;
             }
+
             if (collision.gameObject.tag == "Ground" && grounded == false)
             {
-                rb.velocity = Vector2.zero;
-                grounded = true;
-                airAttack = false;
-                airAction = false;
-
-                if (helmbreaker == true)
-                {
-                    Debug.Log("So Hype");
-                    helmbreaker = false;
-                    anim.Play("HelmBreakerFinish");
-                }
-                else
-                {
-                    if ((activeState is Jump || activeState is Dash))
-                        activeState = new Free(this);
-                }
+                LandingHandler();
             }
-        }
-
-        private void OnCollisionExit2D(Collision2D collision)
-        {
-            if (collision.gameObject.tag == "Ground")
+            else if (collision.gameObject.tag == "Platform" && grounded == false && contactDirection.y < -0.8f)
             {
-                grounded = false;
-                Instantiate(vfx["Jump"], new Vector3(transform.position.x, transform.position.y - 1.5f, transform.position.z), Quaternion.identity);
+                LandingHandler();
             }
         }
 
-        public void DashCheck()
+        void LandingHandler()
         {
-            if (airAction == false)
+            grounded = true;
+            airAttack = false;
+            airAction = false;
+
+            if (risingSlash == true || helmbreaker == true)
+            {
+                if (!(activeState is PostRound || activeState is Parried || activeState is Clash || activeState is PreRound))
+                    activeState = new Recovery(this);
+            }
+            else if(risingSlash == false && helmbreaker == false)
+            {
+                if ((activeState is Jump || activeState is Dash))
+                    activeState = new Free(this);
+            }
+        }
+
+        //use animation event to mark cancel time
+        public void DashCancelable()
+        {
+            dashCancel = true;
+        }
+
+        public void DashCancelableNot()
+        {
+            dashCancel = false;
+        }
+
+        public void DashCheck(float v)
+        {
+            if (!(activeState is Free || activeState is Jump || activeState is Attack))
+            {
+                return;
+            }
+            else if (airAction == false && dashCancel == true)
+                activeState = new Dash(this, v);
+            /*if (airAction == false)
             {
                 if (xAxisCounter >= 2 && first != 0 && first == second)
                 {
@@ -124,7 +153,16 @@ namespace Assets.Code.Shoto
                 {
                     hzSwitch = false;
                 }
-            }
+            }*/
+        }
+
+        public void ResetActions()
+        {
+            grounded = true;
+            airAction = false;
+            airAttack = false;
+            risingSlash = false;
+            helmbreaker = false;
         }
 
         public void AttackCheck()
@@ -176,6 +214,7 @@ namespace Assets.Code.Shoto
                 activeState = new Jump(this, Vector2.zero);
 
             invulToStrike = false;
+            dashCancel = true;
         }
 
         /*public int PlayerNumber(int i)
