@@ -11,9 +11,11 @@ namespace Assets.Code.Shoto
         ShotokunManager manager;
         bool attacking;
         public Vector2 aimVector;
-        public float startUp = 10f;
-        public float inputDelay = 4f / 60f;
-        public float slashTracking = 12f / 60f;
+
+        //Each Attack will change these values upon intialization
+        public float startUp = 10f; //The amount of time before Velocity is applied
+        public float inputDelay = 4f / 60f; //The amount of time before an action is taken after the attack button is pressed
+        public float slashTracking = 12f / 60f; //The amount of time that Velocity is applied to the attack
         float diModifier = 1;
 
         public Attack(ShotokunManager managerRef, Vector2 v2)
@@ -39,6 +41,11 @@ namespace Assets.Code.Shoto
         {
             Track();
             WhichAttack();
+
+            if (manager.gameObject.layer == 8)
+                manager.DetectGround();
+
+            manager.LayerByVelocity();
             /*if(manager.rb.velocity.normalized.y < 0)
             {
                 manager.gameObject.layer = 8;
@@ -62,14 +69,13 @@ namespace Assets.Code.Shoto
                 {
                     if (startUp <= 0)
                     {
-                        manager.rb.velocity = new Vector2(aimVector.x * 350f/*old moveSpeed*/ * 2f/*old dashStrength*/ * Time.fixedDeltaTime, aimVector.y * 350f * 2f * Time.fixedDeltaTime)
-                            + DiCalculation(diModifier);
-
                         if (aimVector.y > 0)
                         {
-                            manager.grounded = false;
-                            manager.gameObject.layer = 10;//sloppy
+                            manager.grounded = false; //Band-Aid because DetectGround is not called if rb.velocity > 0
                         }
+
+                        manager.rb.velocity = new Vector2(aimVector.x * 350f/*old moveSpeed*/ * 2f/*old dashStrength*/ * Time.fixedDeltaTime, aimVector.y * 350f * 2f * Time.fixedDeltaTime)
+                            + DiCalculation(diModifier);
                     }
                 }
             }

@@ -50,7 +50,8 @@ namespace Assets.Code.Shoto
                 if (dashDuration > 0)
                 {
                     dashDuration -= Time.fixedDeltaTime;
-                    manager.rb.velocity = new Vector2(manager.moveSpeed * strength * direction * Time.fixedDeltaTime, CheckSlopeY(manager.CalculateGroundAngle().y / manager.moveSpeed) * strength * Time.fixedDeltaTime);
+                    manager.rb.velocity = new Vector2(manager.moveSpeed * strength * direction * Time.fixedDeltaTime,
+                        (IsEmptyDash(manager.CalculateSlope(manager.CalculateGroundAngle())) * -manager.transform.right.x) * manager.moveSpeed * strength * Time.fixedDeltaTime);
 
                     manager.anim.Play("3_Dash");
 
@@ -87,12 +88,12 @@ namespace Assets.Code.Shoto
             }
         }
 
-        float CheckSlopeY(float f)
+        float IsEmptyDash(float f)
         {
-            if (f > 0)
-                return 0;
-            else
+            if (Mathf.Abs(manager.rb.velocity.x) != 0)
                 return f;
+            else
+                return 0;
         }
     }
 }

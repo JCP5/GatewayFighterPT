@@ -40,16 +40,15 @@ namespace Assets.Code.Shoto
 
             activeState.StateUpdate();
 
-            if (!(activeState is Jump || activeState is Attack/*sloppy*/) && passThrough == false)
+            /*if (!(activeState is Jump || activeState is Attacksloppy) && passThrough == false)
                 gameObject.layer = 8;
             else if (passThrough == true)
-                gameObject.layer = 10;
+                gameObject.layer = 10;*/
         }
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
             Vector3 contactDirection = Vector3.zero;
-
             if (rb != null)
                 contactDirection = collision.contacts[0].point - rb.position;
 
@@ -61,14 +60,22 @@ namespace Assets.Code.Shoto
                 rb.gravityScale = 5f;
             }
 
-            if (collision.gameObject.tag == "Ground" && grounded == false)
+            if (collision.gameObject.tag == "Ground")
             {
                 LandingHandler();
             }
-            else if (collision.gameObject.tag == "Platform" && grounded == false && contactDirection.y < -0.8f)
+            else if (collision.gameObject.tag == "Platform" && contactDirection.y < -0.8f)
             {
                 LandingHandler();
             }
+        }
+
+        private void OnCollisionExit2D(Collision2D collision)
+        {
+            if (collision.gameObject.tag == "Platform")
+                grounded = false;
+
+            DetectGround();
         }
 
         void LandingHandler()
@@ -163,6 +170,7 @@ namespace Assets.Code.Shoto
             airAttack = false;
             risingSlash = false;
             helmbreaker = false;
+            gameObject.layer = 8;
         }
 
         public void AttackCheck()

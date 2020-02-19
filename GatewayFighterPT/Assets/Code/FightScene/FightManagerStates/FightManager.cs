@@ -17,6 +17,7 @@ namespace Assets.Code.FightScene
         public GameObject[] characters;
         public UiManager uiManager;
         public EventSystem es;
+        public FadeEventHandler fadeEventHandler;
 
         public bool paused = false;
 
@@ -44,6 +45,7 @@ namespace Assets.Code.FightScene
                 Debug.LogError("EventSystem not found");
 
             inputManager = FindObjectOfType<InputDetector>();
+            fadeEventHandler.gameObject.SetActive(true);
             List<Vector3> used = new List<Vector3>();
 
             DetectControllerStart();
@@ -236,13 +238,7 @@ namespace Assets.Code.FightScene
 
         public void TextToFight()
         {
-            foreach (Image img in uiManager.elements)
-            {
-                if (img.name == "FadeBlack")
-                {
-                    img.GetComponentInChildren<Text>().text = "Fight!";
-                }
-            }
+            fadeEventHandler.GetComponentInChildren<Text>().text = "Fight!";
 
             activeState = new Fight(this);
         }

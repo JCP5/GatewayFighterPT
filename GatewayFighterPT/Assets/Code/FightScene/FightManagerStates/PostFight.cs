@@ -13,7 +13,7 @@ namespace Assets.Code.FightScene
         FightManager manager;
         int gameWinner;
         bool winScreenOn = false;
-        float waitTime = 2f;
+        float waitTime = 1f;
 
         public PostFight(FightManager managerRef, int winner)
         {
@@ -27,7 +27,6 @@ namespace Assets.Code.FightScene
             }
 
             gameWinner = winner;
-            WinScreen(winner);
         }
 
         public void StateStart()
@@ -41,7 +40,7 @@ namespace Assets.Code.FightScene
                 waitTime -= Time.deltaTime;
             else if (waitTime <= 0 && winScreenOn == false)
             {
-                waitTime = 2f;
+                waitTime = 1f;
                 WinScreen(gameWinner);
             }
         }

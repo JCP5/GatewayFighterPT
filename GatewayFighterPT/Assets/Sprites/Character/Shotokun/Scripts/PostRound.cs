@@ -12,6 +12,7 @@ namespace Assets.Code.Shoto
         public PostRound(ShotokunManager managerRef, bool victory)
         {
             manager = managerRef;
+            manager.ResetValues();
 
             if (victory == true)
                 manager.anim.Play("RoundEnd", 0, 0);
@@ -26,7 +27,7 @@ namespace Assets.Code.Shoto
 
         public void StateUpdate()
         {
-
+            manager.ResetValues();
         }
     }
 }

@@ -21,7 +21,7 @@ namespace Assets.Code.CharacterControl
         public string myAxisY;
         public string myAxisX;
         public string myAxisAttack;
-        public float frameCounter = 0;
+        public float frameCounter = 0; //Frame Counter starts counting when an attack starts (see Attack state)
 
         public int playerNumber;
         public float moveSpeed = 10;
@@ -81,11 +81,6 @@ namespace Assets.Code.CharacterControl
         // Update is called once per frame
         public void FixedUpdate()
         {
-            if (rb.velocity.y > 0)
-                gameObject.layer = 10;
-            else
-                gameObject.layer = 8;
-
             if (t.color.a > 0)
                 t.color -= new Color(0, 0, 0, Time.deltaTime * 1f);
             //activeState.StateUpdate();
@@ -141,6 +136,19 @@ namespace Assets.Code.CharacterControl
             DetectGround();
         }
 
+        public void LayerByVelocity()
+        {
+            if (passThrough == false)
+            {
+                if (rb.velocity.y > 0.2f)
+                    gameObject.layer = 10;
+                else if (rb.velocity.y <= 0.2f)
+                    gameObject.layer = 8;
+            }
+            else
+                gameObject.layer = 10;
+        }
+
         public void ResetGravityScale()
         {
             if (rb != null)
@@ -186,6 +194,14 @@ namespace Assets.Code.CharacterControl
             return hit.normal;
         }
 
+        public float CalculateSlope(Vector2 vector)
+        {
+            if (vector.x != 0)
+                return vector.y / vector.x;
+            else
+                return 0;
+        }
+
         public void PassThroughPlatform()
         {
             passThrough = true;
@@ -194,6 +210,13 @@ namespace Assets.Code.CharacterControl
         public void NeutralHandler()
         {
             passThrough = false;
+        }
+
+        public void ResetValues()
+        {
+            gameObject.layer = 8;
+            grounded = true;
+            rb.velocity = Vector2.zero;
         }
 
         /*public void AttackCheck() //***** Convert to virtual override

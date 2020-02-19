@@ -34,7 +34,6 @@ namespace Assets.Code.Shoto
         {
             myTrans = manager.transform.position;
             manager.AttackCheck();
-            //manager.DashCheck();
             FreeMovement();
         }
 
@@ -56,7 +55,7 @@ namespace Assets.Code.Shoto
             else if (Mathf.Abs(Input.GetAxis(manager.myAxisX)) == 0)
             {
                 pressed = false;
-                manager.rb.velocity = Vector2.zero;
+                manager.rb.velocity = new Vector2(0, -manager.gravityScale);
                 manager.rb.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
                 manager.anim.Play("0_Idle");
             }
@@ -64,8 +63,9 @@ namespace Assets.Code.Shoto
             {
                 //Set Velocity to be the input on the X axis and set animations on whether or not it's being used
                 if (Mathf.Abs(Mathf.Round(Input.GetAxis(manager.myAxisX))) == 1)
-                    manager.rb.velocity = new Vector2(Mathf.Round(Input.GetAxis(manager.myAxisX)) * manager.moveSpeed * Time.fixedDeltaTime, 
-                        CheckSlopeY(Mathf.Round(Input.GetAxis(manager.myAxisX)) / manager.CalculateGroundAngle().y) * manager.moveSpeed * Time.fixedDeltaTime);
+                    manager.rb.velocity = new Vector2(Mathf.Round(Input.GetAxis(manager.myAxisX)) * manager.moveSpeed * Time.fixedDeltaTime,
+                        (manager.CalculateSlope(manager.CalculateGroundAngle()) * -manager.transform.right.x) * manager.moveSpeed * Time.fixedDeltaTime);
+                        //CheckSlopeY(manager.transform.right.x * Mathf.Ceil(manager.CalculateGroundAngle().x) / manager.CalculateGroundAngle().y) * manager.moveSpeed * Time.fixedDeltaTime);
 
                 //Debug.Log(manager.CalculateGroundAngle());
 
@@ -89,12 +89,14 @@ namespace Assets.Code.Shoto
                     pressed = true;
                 }
             }
+
+            manager.LayerByVelocity();
         }
 
         float CheckSlopeY(float f)
         {
             if (f > 0)
-                return 0;
+                return 1;
             else
                 return f;
         }

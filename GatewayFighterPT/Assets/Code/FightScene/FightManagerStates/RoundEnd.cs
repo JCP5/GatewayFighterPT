@@ -15,13 +15,7 @@ namespace Assets.Code.FightScene
         {
             manager = managerRef;
 
-            foreach(Image img in manager.uiManager.elements)
-            {
-                if (img.name == "FadeBlack")
-                    fade = img;
-            }
-
-            fade.GetComponent<Animator>().Play("FadeToBlack", 0, 0);
+            manager.fadeEventHandler.GetComponent<Animator>().Play("FadeToBlack", 0, 0);
         }
 
         public void StateStart()

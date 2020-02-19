@@ -42,6 +42,7 @@ namespace Assets.Code.Shoto
         public void StateUpdate()
         {
             manager.FlipX();
+            manager.LayerByVelocity();
 
             if (manager.airAttack == false)
                 manager.AttackCheck();
@@ -53,10 +54,12 @@ namespace Assets.Code.Shoto
             else if (waitForStartup <= 0 && manager.grounded == true)
             {
                 manager.rb.AddForce(jumpVector, ForceMode2D.Force);
-                manager.gameObject.layer = 10;
+                //manager.gameObject.layer = 10;
                 manager.anim.Play("2_Jump", -1, 0);
                 manager.grounded = false;
             }
+            else if(manager.grounded == false && manager.rb.velocity.y < 0f && manager.passThrough == false)
+                manager.DetectGround();
         }
     }
 }
