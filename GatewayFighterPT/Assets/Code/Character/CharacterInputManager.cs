@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.Code.CharacterControl
 {
@@ -14,6 +15,9 @@ namespace Assets.Code.CharacterControl
         public event neutralEvent NeutralEvent;
 
         public CharacterState character;
+        public GameObject InputDisplayPrefab;
+        public Sprite arrow;
+        public Image[] display;
 
         Vector2 inputVector;
         public List<Vector2> inputs = new List<Vector2>();
@@ -31,15 +35,32 @@ namespace Assets.Code.CharacterControl
         void Start()
         {
             character = this.GetComponent<CharacterState>();
+            display = GetComponentsInChildren<Image>();
+            SetInputDisplayAnchor(InputDisplayPrefab.GetComponent<RectTransform>());
             InitInputTypes();
         }
 
         // Update is called once per frame
-        void Update()
+        void FixedUpdate()
         {
             PopulateInputList();
             HoldTimer();
             InputTimer();
+        }
+
+        void SetInputDisplayAnchor(RectTransform display)
+        {
+            if (character.playerNumber == 1)
+            {
+                display.gameObject.transform.Find("Grid").GetComponent<RectTransform>().anchorMin = Vector2.up;
+                display.gameObject.transform.Find("Grid").GetComponent<RectTransform>().anchorMax = Vector2.up;
+            }
+            else
+            {
+                display.gameObject.transform.Find("Grid").GetComponent<RectTransform>().anchorMin = new Vector2(1, 1);
+                display.gameObject.transform.Find("Grid").GetComponent<RectTransform>().anchorMax = new Vector2(1, 1);
+                display.gameObject.transform.Find("Grid").GetComponent<RectTransform>().anchoredPosition += new Vector2(-50, 0);
+            }
         }
 
         void InitInputTypes()
@@ -156,6 +177,7 @@ namespace Assets.Code.CharacterControl
         void CommandListener(List<Vector2> l)
         {
             SetTimeBetweenInputs(timer);
+            UpdateInputDisplay(inputs);
             //DoubleTap Commands
             if (inputs.Count > 1)
             {
@@ -175,12 +197,14 @@ namespace Assets.Code.CharacterControl
 
                     if (FlipByRight(temp[0]) == commandList["IAD"][0] && FlipByRight(temp[1]) == commandList["IAD"][1] && timeBetweenInputs < doubleTapWindow && overloadCheck == false)
                     {
+                        Debug.Log("Whoop");
                         if (DashEvent != null)
                             DashEvent(temp[1].x);
                     }
 
                     if (FlipByRight(temp[0]) == commandList["EmptyDash"][0] && FlipByRight(temp[1]) == commandList["EmptyDash"][1] && timeBetweenInputs < doubleTapWindow && overloadCheck == false)
                     {
+                        Debug.Log("Whoop");
                         if (DashEvent != null)
                             DashEvent(temp[1].x);
                     }
@@ -206,7 +230,7 @@ namespace Assets.Code.CharacterControl
             {
                 if (inputs[inputs.Count - 1].y == -1 && overloadCheck == true && heldTimer >= heldTimeWindow)
                 {
-                    Debug.Log("DownHeldEvent");
+                    //Debug.Log("DownHeldEvent");7
                     if (DownHeldEvent != null)
                         DownHeldEvent();
                 }
@@ -228,6 +252,25 @@ namespace Assets.Code.CharacterControl
             temp = new Vector2(Mathf.Abs(v2.x), v2.y);
 
             return temp;
+        }
+
+        void UpdateInputDisplay(List<Vector2> l)
+        {
+            if (l.Count > 0)
+            {
+                for (int i = 0; i < l.Count; i++)
+                {
+                    float degrees = V2toFloat(l[i]);
+                    display[i].rectTransform.rotation = Quaternion.Euler(new Vector3(0, 0, degrees));
+                    display[i].sprite = arrow;
+                }
+            }
+        }
+
+        float V2toFloat(Vector2 v2)
+        {
+            float degrees = Mathf.Atan2(v2.y, v2.x) * 180f / Mathf.PI;
+            return degrees;
         }
     }
 }

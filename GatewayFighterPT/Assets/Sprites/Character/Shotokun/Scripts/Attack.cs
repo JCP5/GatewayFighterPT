@@ -42,7 +42,7 @@ namespace Assets.Code.Shoto
             Track();
             WhichAttack();
 
-            if (manager.gameObject.layer == 8)
+            if (manager.gameObject.layer == LayerMask.GetMask("Character"))
                 manager.DetectGround();
 
             manager.LayerByVelocity();

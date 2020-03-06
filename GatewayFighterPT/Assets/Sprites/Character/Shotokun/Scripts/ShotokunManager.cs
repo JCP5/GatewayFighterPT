@@ -39,11 +39,7 @@ namespace Assets.Code.Shoto
             base.FixedUpdate();
 
             activeState.StateUpdate();
-
-            /*if (!(activeState is Jump || activeState is Attacksloppy) && passThrough == false)
-                gameObject.layer = 8;
-            else if (passThrough == true)
-                gameObject.layer = 10;*/
+            //Debug.Log(activeState);
         }
 
         private void OnCollisionEnter2D(Collision2D collision)
@@ -60,7 +56,7 @@ namespace Assets.Code.Shoto
                 rb.gravityScale = 5f;
             }
 
-            if (collision.gameObject.tag == "Ground")
+            if (collision.gameObject.tag == "Ground" && contactDirection.y < -0.8f)
             {
                 LandingHandler();
             }
@@ -74,13 +70,13 @@ namespace Assets.Code.Shoto
         {
             if (collision.gameObject.tag == "Platform")
                 grounded = false;
-
-            DetectGround();
+            else
+                DetectGround();
         }
 
         void LandingHandler()
         {
-            grounded = true;
+            DetectGround();
             airAttack = false;
             airAction = false;
 
@@ -115,52 +111,6 @@ namespace Assets.Code.Shoto
             }
             else if (airAction == false && dashCancel == true)
                 activeState = new Dash(this, v);
-            /*if (airAction == false)
-            {
-                if (xAxisCounter >= 2 && first != 0 && first == second)
-                {
-                    xAxisCounter = 0;
-                    activeState = new Dash(this, first);
-                }
-
-                if (startBuffer == true)
-                {
-                    if (doubleBuffer > 0)
-                        doubleBuffer -= 1 * Time.fixedDeltaTime;
-                    else
-                    {
-                        startBuffer = false;
-                        doubleBuffer = adjustDoubleBuffer;
-                        xAxisCounter = 0;
-                        first = 0;
-                        second = 0;
-                    }
-                }
-
-                if (Mathf.Abs(Input.GetAxisRaw(myAxisX)) > 0.5f)
-                {
-                    if (hzSwitch == false)
-                    {
-                        startBuffer = true;
-                        hzSwitch = true;
-                        xAxisCounter++;
-
-                        if (first == 0 || first != Mathf.Round(Input.GetAxisRaw(myAxisX)))
-                        {
-                            first = Mathf.Round(Input.GetAxisRaw(myAxisX));
-                            doubleBuffer = adjustDoubleBuffer;
-                        }
-                        else if (Mathf.Abs(first) == 1)
-                        {
-                            second = Mathf.Round(Input.GetAxisRaw(myAxisX));
-                        }
-                    }
-                }
-                if (Mathf.Abs(Input.GetAxisRaw(myAxisX)) == 0)
-                {
-                    hzSwitch = false;
-                }
-            }*/
         }
 
         public void ResetActions()

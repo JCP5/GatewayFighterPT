@@ -24,6 +24,11 @@ public class ClashBox : MonoBehaviour
     {
         CharacterState opponent = collision.GetComponentInParent<CharacterState>();
 
+        ClashEffect(opponent, collision);
+    }
+
+    public void ClashEffect(CharacterState opponent, Collider2D collision)
+    {
         if (collision.GetComponent<ClashBox>() && collision.transform.parent.tag != this.transform.parent.tag)
         {
             contactDirection = collision.transform.position - myTrans.position;

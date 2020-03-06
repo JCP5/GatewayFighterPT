@@ -18,6 +18,7 @@ namespace Assets.Code.Shoto
             frameDifference = frameData;
             text = t;
             manager.ResetGravityScale();
+            manager.ResetActions();
 
             Vector2 opponentDir = opponentRef.position - manager.transform.position;
             Vector2 forceVector = new Vector2(opponentDir.x / Mathf.Abs(opponentDir.x), 0) - new Vector2(0, opponentDir.y);
@@ -66,7 +67,7 @@ namespace Assets.Code.Shoto
             t.text = (Mathf.Round(frameDifference * 60)).ToString();
             t.GetComponent<Animator>().Play("FadeOut", -1, 0);
             t.GetComponentInParent<Canvas>().GetComponent<RectTransform>().localRotation = manager.transform.rotation;
-            Debug.Log(manager.name + " " + frameDifference * 60);
+            //Debug.Log(manager.name + " " + frameDifference * 60);
         }
     }
 }

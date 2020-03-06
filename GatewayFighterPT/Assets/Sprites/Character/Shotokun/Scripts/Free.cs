@@ -40,6 +40,7 @@ namespace Assets.Code.Shoto
         void FreeMovement()
         {
             manager.FlipX();
+            DetectGround();
 
             if (Input.GetAxis(manager.myAxisY) > 0.5f) //Check for jump
             {
@@ -55,21 +56,24 @@ namespace Assets.Code.Shoto
             else if (Mathf.Abs(Input.GetAxis(manager.myAxisX)) == 0)
             {
                 pressed = false;
-                manager.rb.velocity = new Vector2(0, -manager.gravityScale);
                 manager.rb.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
+                manager.rb.velocity = Vector2.zero;
                 manager.anim.Play("0_Idle");
             }
             else if (Input.GetAxis(manager.myAxisY) < 0.5f) //No input on the Y axis
             {
                 //Set Velocity to be the input on the X axis and set animations on whether or not it's being used
                 if (Mathf.Abs(Mathf.Round(Input.GetAxis(manager.myAxisX))) == 1)
-                    manager.rb.velocity = new Vector2(Mathf.Round(Input.GetAxis(manager.myAxisX)) * manager.moveSpeed * Time.fixedDeltaTime,
-                        (manager.CalculateSlope(manager.CalculateGroundAngle()) * -manager.transform.right.x) * manager.moveSpeed * Time.fixedDeltaTime);
-                        //CheckSlopeY(manager.transform.right.x * Mathf.Ceil(manager.CalculateGroundAngle().x) / manager.CalculateGroundAngle().y) * manager.moveSpeed * Time.fixedDeltaTime);
+                    manager.rb.velocity = new Vector2(Mathf.Round(Input.GetAxis(manager.myAxisX)) * manager.moveSpeed * Time.fixedDeltaTime, NegateGravityUpSlope() * Time.fixedDeltaTime);
 
-                //Debug.Log(manager.CalculateGroundAngle());
+                    /*manager.rb.velocity = new Vector2(Mathf.Round(Input.GetAxis(manager.myAxisX)) * manager.moveSpeed * Time.fixedDeltaTime,
+                        (manager.CalculateSlope(manager.CalculateGroundAngle()) * -manager.transform.right.x) * manager.moveSpeed * Time.fixedDeltaTime);*/
 
-                //Debug.Log(new Vector2(Mathf.Round(Input.GetAxis(manager.myAxisX)) * (Mathf.Abs(CheckSlope(manager.CalculateGroundAngle().x)) * manager.moveSpeed) * Time.fixedDeltaTime, manager.CalculateGroundAngle().y * manager.moveSpeed * Time.fixedDeltaTime));
+                    //CheckSlopeY(manager.transform.right.x * Mathf.Ceil(manager.CalculateGroundAngle().x) / manager.CalculateGroundAngle().y) * manager.moveSpeed * Time.fixedDeltaTime);
+
+                    //Debug.Log(manager.CalculateGroundAngle());
+
+                    //Debug.Log(new Vector2(Mathf.Round(Input.GetAxis(manager.myAxisX)) * (Mathf.Abs(CheckSlope(manager.CalculateGroundAngle().x)) * manager.moveSpeed) * Time.fixedDeltaTime, manager.CalculateGroundAngle().y * manager.moveSpeed * Time.fixedDeltaTime));
 
                 manager.rb.constraints = RigidbodyConstraints2D.FreezeRotation;
 
@@ -91,6 +95,43 @@ namespace Assets.Code.Shoto
             }
 
             manager.LayerByVelocity();
+        }
+
+        void DetectGround()
+        {
+            if (manager.passThrough == false)
+            {
+                int layerMask = ~(1 << 8);
+                RaycastHit2D hit;
+                hit = Physics2D.Raycast(manager.transform.position, -Vector2.up, 2f, layerMask);
+
+                if (hit.collider == null)
+                    manager.grounded = false;
+                else
+                    manager.grounded = true;
+            }
+            else
+                return;
+        }
+
+        float NegateGravityUpSlope()
+        {
+            Vector2 climbingSlope = new Vector2(Mathf.Abs(manager.CalculateGroundAngle().x) * manager.transform.right.x, 0);
+            float modifier = manager.rb.gravityScale;
+
+            if (manager.CalculateSlope(manager.CalculateGroundAngle()) != 0)
+            {
+                if (climbingSlope.x > 0)
+                {
+                    return manager.moveSpeed * manager.CalculateSlope(manager.CalculateGroundAngle());
+                }
+                else
+                    return -manager.moveSpeed * manager.CalculateSlope(manager.CalculateGroundAngle());
+            }
+            else
+            {
+                return -manager.moveSpeed * manager.CalculateSlope(manager.CalculateGroundAngle());
+            }
         }
 
         float CheckSlopeY(float f)

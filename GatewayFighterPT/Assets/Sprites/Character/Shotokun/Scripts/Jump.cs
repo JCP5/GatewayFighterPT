@@ -58,8 +58,6 @@ namespace Assets.Code.Shoto
                 manager.anim.Play("2_Jump", -1, 0);
                 manager.grounded = false;
             }
-            else if(manager.grounded == false && manager.rb.velocity.y < 0f && manager.passThrough == false)
-                manager.DetectGround();
         }
     }
 }

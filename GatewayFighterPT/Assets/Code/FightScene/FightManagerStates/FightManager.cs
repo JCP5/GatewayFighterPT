@@ -210,13 +210,7 @@ namespace Assets.Code.FightScene
         {
             rounds++;
 
-            foreach (Image img in uiManager.elements)
-            {
-                if (img.name == "FadeBlack")
-                {
-                    img.GetComponentInChildren<Text>().text = "Round " + rounds;
-                }
-            }
+            fadeEventHandler.GetComponentInChildren<Text>().text = "Round " + rounds;
         }
 
         public void DisableCharacters()
@@ -253,6 +247,7 @@ namespace Assets.Code.FightScene
                 cs.PreRound();
                 cs.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
                 cs.transform.position = spawnLocations[cs.playerNumber - 1].position;
+                cs.FaceOpponent(cs.transform.position, Vector3.zero);
             }
         }
 

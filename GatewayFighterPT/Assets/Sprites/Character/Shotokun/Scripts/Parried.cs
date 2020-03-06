@@ -15,6 +15,7 @@ namespace Assets.Code.Shoto
             manager = managerRef;
             opponent = opponentRef;
             manager.ResetGravityScale();
+            manager.ResetActions();
 
             Vector2 opponentVector = opponent.position - manager.transform.position;
             Vector2 forceVector = new Vector2(opponentVector.x / Mathf.Abs(opponentVector.x), 0) - new Vector2(0, opponentVector.y);

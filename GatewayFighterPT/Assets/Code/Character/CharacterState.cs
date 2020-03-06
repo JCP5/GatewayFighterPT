@@ -42,6 +42,14 @@ namespace Assets.Code.CharacterControl
 
         public Animator anim;
 
+        private void Awake()
+        {
+            if (GetComponent<Rigidbody2D>() != null)
+                rb = GetComponent<Rigidbody2D>();
+            else
+                Debug.LogError("RigidBody is missing");
+        }
+
         // Start is called before the first frame update
         public void Start()
         {
@@ -69,12 +77,6 @@ namespace Assets.Code.CharacterControl
                 else
                     Debug.LogError("No controller detected");
             }
-
-            if (GetComponent<Rigidbody2D>() != null)
-                rb = GetComponent<Rigidbody2D>();
-            else
-                Debug.LogError("RigidBody is missing");
-
             //activeState = new Free(this);
         }
 
@@ -141,12 +143,21 @@ namespace Assets.Code.CharacterControl
             if (passThrough == false)
             {
                 if (rb.velocity.y > 0.2f)
-                    gameObject.layer = 10;
+                {
+                    int mask = LayerMask.NameToLayer("PlatformPass");
+                    gameObject.layer = mask;
+                }
                 else if (rb.velocity.y <= 0.2f)
-                    gameObject.layer = 8;
+                {
+                    int mask = LayerMask.NameToLayer("Character");
+                    gameObject.layer = mask;
+                }
             }
             else
-                gameObject.layer = 10;
+            {
+                int mask = LayerMask.NameToLayer("PlatformPass");
+                gameObject.layer = mask;
+            }
         }
 
         public void ResetGravityScale()
@@ -170,16 +181,18 @@ namespace Assets.Code.CharacterControl
 
         public void DetectGround()
         {
-            int layerMask = ~(LayerMask.GetMask("Character"));
+            int layerMask = ~(1 << 8);
             RaycastHit2D hit;
             hit = Physics2D.Raycast(this.transform.position, -Vector2.up, 1f, layerMask);
 
             if (hit.collider == null)
+            {
                 grounded = false;
+            }
             else
+            {
                 grounded = true;
-
-            Debug.Log(hit.collider);
+            }
         }
 
         public Vector3 CalculateGroundAngle()
@@ -197,7 +210,7 @@ namespace Assets.Code.CharacterControl
         public float CalculateSlope(Vector2 vector)
         {
             if (vector.x != 0)
-                return vector.y / vector.x;
+                return vector.y / -vector.x;
             else
                 return 0;
         }
@@ -214,7 +227,7 @@ namespace Assets.Code.CharacterControl
 
         public void ResetValues()
         {
-            gameObject.layer = 8;
+            gameObject.layer = LayerMask.NameToLayer("Character");
             grounded = true;
             rb.velocity = Vector2.zero;
         }

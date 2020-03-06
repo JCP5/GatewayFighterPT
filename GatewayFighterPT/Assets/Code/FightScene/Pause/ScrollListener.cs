@@ -15,12 +15,14 @@ namespace Assets.Code.ButtonScrollUI
 
         void Start()
         {
-            swb = GetComponentInParent<ScrollWithButton>();
+            if (transform.parent != null)
+                swb = GetComponentInParent<ScrollWithButton>();
         }
 
         public void OnSelect(BaseEventData eventData)
         {
-            swb.SetVertical(index);
+            if (swb != null)
+                swb.SetVertical(index);
         }
 
         public void Press()

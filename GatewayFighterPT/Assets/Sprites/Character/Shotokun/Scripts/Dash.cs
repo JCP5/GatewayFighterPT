@@ -51,7 +51,7 @@ namespace Assets.Code.Shoto
                 {
                     dashDuration -= Time.fixedDeltaTime;
                     manager.rb.velocity = new Vector2(manager.moveSpeed * strength * direction * Time.fixedDeltaTime,
-                        (IsEmptyDash(manager.CalculateSlope(manager.CalculateGroundAngle())) * -manager.transform.right.x) * manager.moveSpeed * strength * Time.fixedDeltaTime);
+                        (IsEmptyDash(NegateGravityUpSlope() * strength * Time.fixedDeltaTime)));
 
                     manager.anim.Play("3_Dash");
 
@@ -94,6 +94,26 @@ namespace Assets.Code.Shoto
                 return f;
             else
                 return 0;
+        }
+
+        float NegateGravityUpSlope()
+        {
+            Vector2 climbingSlope = new Vector2(Mathf.Abs(manager.CalculateGroundAngle().x) * manager.transform.right.x, 0);
+            float modifier = manager.rb.gravityScale;
+
+            if (manager.CalculateSlope(manager.CalculateGroundAngle()) != 0)
+            {
+                if (climbingSlope.x > 0)
+                {
+                    return manager.moveSpeed * manager.CalculateSlope(manager.CalculateGroundAngle());
+                }
+                else
+                    return -manager.moveSpeed * manager.CalculateSlope(manager.CalculateGroundAngle());
+            }
+            else
+            {
+                return -manager.moveSpeed * manager.CalculateSlope(manager.CalculateGroundAngle());
+            }
         }
     }
 }
