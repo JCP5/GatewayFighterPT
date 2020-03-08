@@ -17,6 +17,7 @@ namespace Assets.Code.Shoto
             strength = managerRef.dashStrength;
             manager = managerRef;
             direction = v;
+            manager.airAttack = false;
             //manager.doubleBuffer = manager.adjustDoubleBuffer;
 
             manager.rb.constraints = RigidbodyConstraints2D.FreezeRotation;

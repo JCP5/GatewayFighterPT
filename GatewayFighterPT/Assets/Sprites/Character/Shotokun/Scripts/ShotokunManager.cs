@@ -56,11 +56,7 @@ namespace Assets.Code.Shoto
                 rb.gravityScale = 5f;
             }
 
-            if (collision.gameObject.tag == "Ground" && contactDirection.y < -0.8f)
-            {
-                LandingHandler();
-            }
-            else if (collision.gameObject.tag == "Platform" && contactDirection.y < -0.8f)
+            if (contactDirection.y < -0.8f)
             {
                 LandingHandler();
             }

@@ -29,4 +29,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Stages/StrangeSwamp.unity
     guid: 3b7ee19dc566b164e95585d44cc54bce
+  - enabled: 1
+    path: Assets/Scenes/TestScene.unity
+    guid: fe10d1c11abf8af478f8d75c2a4bfbff
   m_configObjects: {}
