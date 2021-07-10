@@ -60,6 +60,10 @@ namespace Assets.Code.Shoto
             {
                 LandingHandler();
             }
+            else if (collision.gameObject.tag == "Ground")
+            {
+                LandingHandler();
+            }
         }
 
         private void OnCollisionExit2D(Collision2D collision)
@@ -127,16 +131,15 @@ namespace Assets.Code.Shoto
             }
         }
 
-        public override void Hit()
+        public override void HitTaken()
         {
             activeState = new PostRound(this, false);
             Instantiate(vfx["Hit"], transform.position, Quaternion.identity);
-            Debug.Log("Fuck");
         }
 
-        public override void HitBox()
+        public override void HitLanded()
         {
-            activeState = new PostRound(this, true);
+            this.enabled = false;
         }
 
         public override void Clash(CharacterState opponent, float frames, Vector3 contactpoint)

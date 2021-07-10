@@ -21,9 +21,9 @@ namespace Assets.Code.Box
             fm = FindObjectOfType<FightManager>();
         }
 
-        public void Hit()
+        public void HitTaken()
         {
-            manager.Hit();
+            manager.HitTaken();
         }
     }
 }

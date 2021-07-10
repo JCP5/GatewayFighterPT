@@ -98,12 +98,12 @@ namespace Assets.Code.CharacterControl
             this.GetComponent<CharacterInputManager>().enabled = true;
         }
 
-        public virtual void Hit()
+        public virtual void HitTaken()
         {
 
         }
 
-        public virtual void HitBox()
+        public virtual void HitLanded()
         {
 
         }

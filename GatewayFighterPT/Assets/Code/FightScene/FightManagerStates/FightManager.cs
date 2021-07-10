@@ -39,10 +39,14 @@ namespace Assets.Code.FightScene
         // Start is called before the first frame update
         void Start()
         {
-            if (FindObjectOfType<EventSystem>() != null)
+            try
+            {
                 es = FindObjectOfType<EventSystem>();
-            else
+            }
+            catch
+            {
                 Debug.LogError("EventSystem not found");
+            }
 
             inputManager = FindObjectOfType<InputDetector>();
             fadeEventHandler.gameObject.SetActive(true);

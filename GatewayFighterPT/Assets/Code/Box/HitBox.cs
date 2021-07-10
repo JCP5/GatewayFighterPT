@@ -16,10 +16,6 @@ namespace Assets.Code.Box
             manager = this.GetComponentInParent<CharacterState>();
         }
 
-        private void Update()
-        {
-        }
-
         private void OnTriggerEnter2D(Collider2D collision)
         {
             if (collision.GetComponent<ClashBox>() && collision.transform.parent.tag != this.transform.parent.tag)
@@ -29,11 +25,10 @@ namespace Assets.Code.Box
             else if (collision.GetComponent<HurtBox>() && collision.transform.parent.tag != this.transform.parent.tag)
             {
                 //this.GetComponentInParent<CharacterState>().activeState = new PostRound(this.GetComponentInParent<CharacterState>(), true);
-                manager.HitBox();
-                collision.GetComponent<HurtBox>().Hit();
+                manager.HitLanded();
+                collision.GetComponent<HurtBox>().HitTaken();
                 FindObjectOfType<FightManager>().UpdateWins(this.transform.parent.GetComponent<CharacterState>().playerNumber);
             }
-
         }
     }
 }

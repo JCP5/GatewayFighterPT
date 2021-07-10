@@ -19,7 +19,8 @@ namespace Assets.Code.Box
             Vector3 contactDir = collision.transform.position - transform.position;
             Vector3 contactPoint = transform.position + contactDir;
 
-            if (collision.GetComponent<HitBox>() && CheckInFront(collision.transform.parent) || collision.GetComponent<ClashBox>() && CheckInFront(collision.transform.parent))
+            if (collision.GetComponent<HitBox>() && CheckInFront(collision.transform.parent) || 
+                collision.GetComponent<ClashBox>() && CheckInFront(collision.transform.parent))
             {
                 Instantiate(manager.vfx["Parry"], contactPoint, Quaternion.Euler(-90f, 0, 0));
                 Debug.Log(transform.InverseTransformPoint(collision.transform.parent.position));

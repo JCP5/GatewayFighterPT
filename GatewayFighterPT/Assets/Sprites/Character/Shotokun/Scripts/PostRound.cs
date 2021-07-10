@@ -13,6 +13,7 @@ namespace Assets.Code.Shoto
         {
             manager = managerRef;
             manager.ResetValues();
+            manager.rb.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
 
             if (victory == true)
                 manager.anim.Play("RoundEnd", 0, 0);
